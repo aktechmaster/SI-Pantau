@@ -7,115 +7,108 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary-orange: #ff7f00;
-            --secondary-orange: #e65100; 
-            --gradient: linear-gradient(135deg, var(--primary-orange) 0%, var(--secondary-orange) 100%);
-            --shadow: 0 10px 30px rgba(255, 127, 0, 0.3);
-            --card-bg: #fff;
-            --modal-btn-cyan: #00c3ff;
-            --modal-btn-hover: #00b3ea;
+            /* Warna Oranye yang lebih kalem dan elegan */
+            --primary-orange: #d97706; /* Amber-ish Gold */
+            --secondary-orange: #b45309; /* Deep Warm Orange */
+            --bg-light: #f8fafc;
+            --text-main: #334155;
+            --gradient: linear-gradient(135deg, #e67e22 0%, #d35400 100%);
+            --shadow: 0 10px 25px rgba(211, 84, 0, 0.15);
+            --card-bg: #ffffff;
+            --modal-btn-cyan: #475569; /* Diubah ke Slate agar lebih formal */
+            --modal-btn-hover: #1e293b;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
-        body { background-color: #f4f6f9; color: #333; padding-bottom: 50px; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, sans-serif; }
+        body { background-color: var(--bg-light); color: var(--text-main); padding-bottom: 50px; }
 
         /* --- DASHBOARD CONTAINER --- */
-        #dashboard-container {
-            display: block; 
-        }
+        #dashboard-container { display: block; }
 
         /* --- Navbar --- */
         .navbar {
-            background: var(--gradient);
+            background: #ffffff; /* Navbar putih agar lebih bersih */
             padding: 15px 30px;
             display: flex; justify-content: space-between; align-items: center;
-            color: white; box-shadow: 0 4px 15px rgba(255, 127, 0, 0.2); position: relative;
+            color: var(--text-main); 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05); 
+            position: relative;
+            border-bottom: 3px solid var(--primary-orange);
         }
-        .navbar-brand { display: flex; align-items: center; font-weight: bold; font-size: 1.1rem; }
+        .navbar-brand { display: flex; align-items: center; font-weight: 700; font-size: 1.1rem; color: var(--secondary-orange); }
         .navbar-brand i { margin-right: 10px; font-size: 1.5rem; }
-        .navbar-date { font-size: 0.9rem; opacity: 0.95; }
-        @media (max-width: 768px) { .navbar-date { display: none; } }
+        .navbar-date { font-size: 0.9rem; color: #64748b; }
 
         /* Dropdown Menu */
         .menu-container { position: relative; }
-        .menu-toggle { cursor: pointer; font-size: 1.4rem; padding: 5px; transition: transform 0.2s; }
-        .menu-toggle:hover { transform: scale(1.1); }
+        .menu-toggle { cursor: pointer; font-size: 1.4rem; color: var(--text-main); padding: 5px; }
         .dropdown-menu {
-            display: none; position: absolute; top: 40px; right: 0;
-            background: white; width: 200px; border-radius: 8px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.15); z-index: 2000;
-            overflow: hidden; animation: fadeIn 0.2s ease;
+            display: none; position: absolute; top: 45px; right: 0;
+            background: white; width: 220px; border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1); z-index: 2000;
+            border: 1px solid #edf2f7; overflow: hidden;
         }
         .dropdown-menu.active { display: block; }
         .dropdown-menu a {
             display: flex; align-items: center; padding: 12px 20px;
-            text-decoration: none; color: #555; font-size: 0.95rem; transition: background 0.2s;
+            text-decoration: none; color: #475569; font-size: 0.9rem; transition: 0.2s;
         }
-        .dropdown-menu a i { margin-right: 10px; width: 20px; text-align: center; color: var(--secondary-orange); }
-        .dropdown-menu a:hover { background-color: #fef0e6; color: var(--secondary-orange); }
-        .dropdown-divider { height: 1px; background-color: #eee; margin: 0; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        .dropdown-menu a i { margin-right: 12px; width: 20px; color: var(--primary-orange); }
+        .dropdown-menu a:hover { background-color: #fff7ed; color: var(--secondary-orange); }
 
         /* --- Content Styles --- */
-        .container { max-width: 1200px; margin: 20px auto; padding: 0 20px; }
+        .container { max-width: 1100px; margin: 30px auto; padding: 0 20px; }
         
         .welcome-card {
-            background: var(--gradient); border-radius: 15px; padding: 40px; color: white;
+            background: var(--gradient); border-radius: 20px; padding: 40px; color: white;
             display: flex; justify-content: space-between; align-items: center;
-            position: relative; overflow: hidden; box-shadow: var(--shadow); margin-bottom: 30px;
+            position: relative; overflow: hidden; box-shadow: var(--shadow); margin-bottom: 40px;
         }
-        .welcome-card::before {
-            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-            background: url('https://www.transparenttextures.com/patterns/cubes.png'); opacity: 0.15; mix-blend-mode: overlay;
-        }
-        .welcome-text h1 { font-size: 1.8rem; margin-bottom: 10px; }
-        .welcome-text h2 { font-size: 2.2rem; font-weight: 800; text-shadow: 2px 2px 10px rgba(0,0,0,0.15); }
-        .profile-pic { width: 120px; height: 120px; border-radius: 50%; border: 4px solid rgba(255,255,255,0.4); object-fit: cover; z-index: 1; }
+        .welcome-text h1 { font-size: 1.5rem; font-weight: 400; opacity: 0.9; }
+        .welcome-text h2 { font-size: 2rem; font-weight: 700; margin-top: 5px; }
+        .profile-pic { width: 110px; height: 110px; border-radius: 20px; border: 3px solid rgba(255,255,255,0.3); object-fit: cover; z-index: 1; }
 
         /* Grid Cards */
-        .grid-menu { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        .grid-menu { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 25px; }
         .card {
-            background: var(--card-bg); border-radius: 12px; padding: 25px; text-align: center;
-            cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            min-height: 180px; display: flex; flex-direction: column; justify-content: center; align-items: center;
-            border-top: 4px solid transparent;
+            background: var(--card-bg); border-radius: 16px; padding: 30px; text-align: center;
+            cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+            border: 1px solid #f1f5f9; display: flex; flex-direction: column; align-items: center;
         }
-        .card:hover { transform: translateY(-5px); box-shadow: var(--shadow); border-top: 4px solid var(--primary-orange); }
-        .card-icon { font-size: 2.5rem; background: linear-gradient(135deg, #FF8C00, #FFD700); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 15px; }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 12px 20px rgba(0,0,0,0.06); border-color: var(--primary-orange); }
+        .card h3 { font-size: 1.1rem; color: #1e293b; margin-top: 10px; }
+        .card p { font-size: 0.85rem; color: #64748b; margin-top: 5px; }
+        
+        .card-icon { font-size: 2.2rem; color: var(--primary-orange); margin-bottom: 15px; opacity: 0.8; }
+        
         .pie-chart {
-            width: 80px; height: 80px; border-radius: 50%; position: relative;
+            width: 70px; height: 70px; border-radius: 50%; position: relative;
             display: flex; justify-content: center; align-items: center; margin-bottom: 15px;
         }
         .pie-chart::after {
             content: attr(data-percent); position: absolute; background: white;
-            width: 60px; height: 60px; border-radius: 50%; display: flex;
-            justify-content: center; align-items: center; font-weight: bold; color: var(--primary-orange);
+            width: 55px; height: 55px; border-radius: 50%; display: flex;
+            justify-content: center; align-items: center; font-size: 0.9rem; font-weight: 700; color: var(--secondary-orange);
         }
 
         /* --- MODALS --- */
         .modal {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6); z-index: 3000; justify-content: center; align-items: center;
-            opacity: 0; transition: opacity 0.3s ease;
+            background: rgba(15, 23, 42, 0.7); z-index: 3000; justify-content: center; align-items: center;
         }
-        .modal.show { display: flex; opacity: 1; }
+        .modal.show { display: flex; }
+        .modal-content-absensi, .modal-content-about, .modal-content-password { 
+            background: white; padding: 30px; border-radius: 20px; width: 90%; max-width: 450px; 
+            border-top: 6px solid var(--primary-orange);
+        }
 
-        /* Modal Styles */
-        .modal-content-absensi { background: white; padding: 30px; border-radius: 10px; width: 90%; max-width: 500px; position: relative; border-top: 5px solid var(--primary-orange); }
-        .modal-content-about { background: white; padding: 40px 30px; border-radius: 20px; width: 90%; max-width: 350px; text-align: center; position: relative; }
-        .modal-content-password { background: white; padding: 25px; border-radius: 15px; width: 90%; max-width: 400px; position: relative; }
+        .btn-cyan { background: var(--primary-orange); color: white; border: none; padding: 12px; width: 100%; border-radius: 10px; font-weight: 600; cursor: pointer; transition: 0.3s; }
+        .btn-cyan:hover { background: var(--secondary-orange); }
+        
+        .attendance-list li { padding: 12px 0; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; }
+        .tag-absent { background: #fee2e2; color: #b91c1c; padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; }
 
-        /* Common Elements */
-        .btn-cyan { background: var(--modal-btn-cyan); color: white; border: none; padding: 12px 0; width: 100%; border-radius: 25px; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        .btn-cyan:hover { background: var(--modal-btn-hover); transform: scale(1.02); }
-        .form-input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; margin-bottom: 15px; outline: none; }
-        .form-input:focus { border-color: var(--modal-btn-cyan); }
-        .attendance-list { list-style: none; margin-top: 20px; }
-        .attendance-list li { padding: 10px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; }
-        .tag-absent { background: #ffebee; color: #c62828; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; }
-        .close-x { cursor: pointer; float: right; font-size: 1.5rem; }
-
-        .footer { text-align: center; margin-top: 50px; font-size: 0.8rem; color: #999; }
+        .footer { text-align: center; margin-top: 60px; font-size: 0.85rem; color: #94a3b8; }
     </style>
 </head>
 <body>
@@ -123,17 +116,17 @@
     <div id="dashboard-container">
         <nav class="navbar">
             <div class="navbar-brand">
-                <i class="fas fa-school"></i> SMPIT Al-Kautsar
+                <i class="fas fa-school"></i> SMPIT AL-KAUTSAR
             </div>
-            <div class="navbar-date" id="currentDate">Rabu, 28 Januari 2026</div>
+            <div class="navbar-date" id="currentDate">Kamis, 29 Januari 2026</div>
             <div class="menu-container">
-                <div class="menu-toggle" onclick="toggleMenu()"><i class="fas fa-bars"></i></div>
+                <div class="menu-toggle" onclick="toggleMenu()"><i class="fas fa-ellipsis-v"></i></div>
                 <div class="dropdown-menu" id="dropdownMenu">
-                    <a href="#" onclick="refreshData()"><i class="fas fa-sync-alt"></i> Refresh Data</a>
+                    <a href="#"><i class="fas fa-sync-alt"></i> Refresh Data</a>
                     <a href="#" onclick="openModal('modalAbout')"><i class="fas fa-info-circle"></i> Tentang</a>
-                    <a href="#" onclick="openModal('modalPassword')"><i class="fas fa-key"></i> Ubah Password</a>
-                    <div class="dropdown-divider"></div>
-                    <a href="#" onclick="logoutAction()" style="color: #d9534f;"><i class="fas fa-sign-out-alt" style="color: #d9534f;"></i> Logout</a>
+                    <a href="#" onclick="openModal('modalPassword')"><i class="fas fa-key"></i> Keamanan</a>
+                    <div style="height:1px; background:#eee;"></div>
+                    <a href="#" style="color: #ef4444;"><i class="fas fa-sign-out-alt" style="color: #ef4444;"></i> Keluar</a>
                 </div>
             </div>
         </nav>
@@ -141,82 +134,66 @@
         <div class="container">
             <div class="welcome-card">
                 <div class="welcome-text">
-                    <h1>Selamat Datang,</h1>
-                    <h2>Bpk. Kepala Sekolah, M.Pd.</h2>
-                    <p>NIPY: 12345678 | Kepala Sekolah</p>
+                    <h1>Selamat Datang Kembali,</h1>
+                    <h2>M.Pd. Kepala Sekolah</h2>
+                    <p style="margin-top: 10px; opacity: 0.8;">NIPY: 12345678 • Administrator Utama</p>
                 </div>
                 <img src="https://i.pravatar.cc/150?img=11" alt="Profile" class="profile-pic">
             </div>
 
             <div class="grid-menu">
-                <div class="card" onclick="alert('Membuka detail Jurnal Harian...')">
-                    <div class="pie-chart" style="background: conic-gradient(var(--primary-orange) 85% 0%, #eee 0% 100%);" data-percent="85%"></div>
+                <div class="card">
+                    <div class="pie-chart" style="background: conic-gradient(var(--primary-orange) 85% 0%, #f1f5f9 0% 100%);" data-percent="85%"></div>
                     <h3>Jurnal Harian</h3><p>Keterisian guru hari ini</p>
                 </div>
-                <div class="card" onclick="alert('Membuka detail Jurnal Bulanan...')">
-                    <div class="pie-chart" style="background: conic-gradient(var(--primary-orange) 92% 0%, #eee 0% 100%);" data-percent="92%"></div>
+                <div class="card">
+                    <div class="pie-chart" style="background: conic-gradient(var(--secondary-orange) 92% 0%, #f1f5f9 0% 100%);" data-percent="92%"></div>
                     <h3>Jurnal Bulanan</h3><p>Akumulasi Januari</p>
                 </div>
                 <div class="card" onclick="openModal('modalAbsensi')">
-                    <div class="card-icon"><i class="fas fa-user-times"></i></div>
-                    <h3>Absensi Karyawan</h3><p style="color: red; font-weight: bold;">3 Orang Tidak Hadir</p>
+                    <div class="card-icon"><i class="fas fa-user-clock"></i></div>
+                    <h3>Absensi Karyawan</h3><p style="color: #ef4444; font-weight: 600;">3 Orang Tidak Hadir</p>
                 </div>
-                <div class="card" onclick="alert('Masuk ke Database Pegawai...')">
-                    <div class="card-icon"><i class="fas fa-id-card"></i></div>
+                <div class="card">
+                    <div class="card-icon"><i class="fas fa-users-viewfinder"></i></div>
                     <h3>Daftar Pegawai</h3><p>Database Guru & Staff</p>
                 </div>
-                 <div class="card" onclick="alert('Membuka Notulen...')">
-                    <div class="card-icon"><i class="fas fa-file-signature"></i></div>
-                    <h3>Notulen Rapat</h3><p>Arsip Digital</p>
+                <div class="card">
+                    <div class="card-icon"><i class="fas fa-folder-open"></i></div>
+                    <h3>Notulen Rapat</h3><p>Arsip Digital Sekolah</p>
                 </div>
-                <div class="card" onclick="alert('Membuka Mutabaah...')">
-                    <div class="card-icon"><i class="fas fa-mosque"></i></div>
-                    <h3>Mutabaah</h3><p>Ibadah Harian</p>
+                <div class="card">
+                    <div class="card-icon"><i class="fas fa-heart-pulse"></i></div>
+                    <h3>Mutabaah</h3><p>Laporan Ibadah Harian</p>
                 </div>
             </div>
 
-            <div class="footer">&copy; 2026 Tim IT SMPIT Al-Kautsar | Executive Dashboard System</div>
+            <div class="footer">&copy; 2026 Executive Dashboard | Developed by aktechmaster</div>
         </div>
     </div>
 
-    <div class="modal" id="modalAbsensi">
-        <div class="modal-content-absensi">
-            <span class="close-x" onclick="closeModal('modalAbsensi')">&times;</span>
-            <h2 style="color: var(--primary-orange);"><i class="fas fa-exclamation-circle"></i> Ketidakhadiran</h2>
-            <ul class="attendance-list">
-                <li><span>Ahmad Fauzi</span><span class="tag-absent">Sakit</span></li>
-                <li><span>Siti Aminah</span><span class="tag-absent">Izin</span></li>
-                <li><span>Budi Santoso</span><span class="tag-absent">Tanpa Ket.</span></li>
-            </ul>
-        </div>
-    </div>
-
-    <div class="modal" id="modalAbout">
-        <div class="modal-content-about">
-            <div style="font-size: 4rem; margin-bottom: 20px;">
-                <i class="fas fa-laptop-code" style="color: #9575cd;"></i>
-            </div>
-            <h3>Tentang Aplikasi</h3>
-            <p style="color:#888;">DIGITAL v1.0</p>
-            <p style="color:#888; margin-bottom: 20px;">Developed by aktechmaster</p>
-            <button class="btn-cyan" onclick="closeModal('modalAbout')">Siap!</button>
-        </div>
-    </div>
-
-    <div class="modal" id="modalPassword">
-        <div class="modal-content-password">
-            <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
-                <h3>Ganti Password</h3><span class="close-x" onclick="closeModal('modalPassword')">&times;</span>
-            </div>
-            <p style="color:#666; font-size:0.9rem; margin-bottom:20px;">Lakukan perubahan password secara berkala untuk keamanan.</p>
-            
-            <input type="password" id="oldPass" class="form-input" placeholder="Password Lama (Saat ini)">
-            <input type="password" id="newPass" class="form-input" placeholder="Password Baru (Min. 6 Karakter)">
-            <input type="password" id="confPass" class="form-input" placeholder="Konfirmasi Password Baru">
-            
-            <button class="btn-cyan" onclick="savePasswordLogic()">Simpan Password</button>
-        </div>
-    </div>
+    <script>
+        function toggleMenu() {
+            document.getElementById('dropdownMenu').classList.toggle('active');
+        }
+        function openModal(id) {
+            document.getElementById(id).classList.add('show');
+        }
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('show');
+        }
+        // Menutup dropdown saat klik di luar
+        window.onclick = function(event) {
+            if (!event.target.matches('.menu-toggle') && !event.target.matches('.fa-ellipsis-v')) {
+                var dropdowns = document.getElementsByClassName("dropdown-menu");
+                for (var i = 0; i < dropdowns.length; i++) {
+                    dropdowns[i].classList.remove('active');
+                }
+            }
+        }
+    </script>
+</body>
+</html>
 
     <script>
         // Tanggal
