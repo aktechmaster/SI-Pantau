@@ -308,7 +308,9 @@
     </div>
     <div class="navbar-date" id="currentDate" style="font-weight: 700; color: var(--text-main);"></div>
     <div class="menu-container">
-        <div class="menu-toggle" onclick="toggleMenu()"><i class="fas fa-bars"></i></div>
+        <div class="menu-toggle" onclick="event.stopPropagation(); toggleMenu()">
+            <i class="fas fa-bars"></i>
+        </div>
         <div class="dropdown-menu" id="dropdownMenu">
             <a href="#" onclick="refreshData()"><i class="fas fa-sync-alt"></i> Refresh Data</a>
             <a href="#" onclick="openModal('modalAbout')"><i class="fas fa-info-circle"></i> Tentang</a>
@@ -480,124 +482,97 @@
 
 
     <script>
+    // Konfigurasi Awal
+    const loggedInUser = "Bpk. Kepala Sekolah, M.Pd."; 
+    const webAppUrl = "https://script.google.com/macros/s/AKfycbx4K4zFt99EquOI5tis0DrywRUrJxhAFxTHQJiwUaI0SESVKGPOW6Kwg5AzWxWKb5wt/exec";
 
-        // Logika script tetap sama seperti sebelumnya (sesuai instruksi)
-
+    // 1. Inisialisasi Data Saat Halaman Dimuat
+    window.onload = function() {
+        // Jalankan fungsi update tanggal
         const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-
         document.getElementById('currentDate').innerText = new Date().toLocaleDateString('id-ID', dateOptions);
+        
+        // Ambil data dari database Spreadsheet
+        loadUserData();
+    };
 
+    // 2. Fungsi Ambil Data dari Backend (Code.gs)
+    async function loadUserData() {
+        try {
+            const response = await fetch(webAppUrl);
+            const data = await response.json();
+            const biodata = data.biodata[loggedInUser]; // Mengambil data berdasarkan nama
 
-
-        function toggleMenu() { document.getElementById('dropdownMenu').classList.toggle('active'); }
-
-        function openModal(id) { 
-
-            document.getElementById(id).classList.add('show'); 
-
-            document.getElementById('dropdownMenu').classList.remove('active'); 
-
-        }
-
-        function closeModal(id) { document.getElementById(id).classList.remove('show'); }
-
-
-
-        function logoutAction() {
-
-            if(confirm('Akhiri sesi aman Anda?')) { window.location.href = 'index.html'; }
-
-        }
-
-
-
-        function refreshData() {
-
-            const icon = document.querySelector('.fa-sync-alt');
-
-            icon.classList.add('fa-spin');
-
-            setTimeout(() => { 
-
-                icon.classList.remove('fa-spin'); 
-
-                alert('Sinkronisasi Berhasil!');
-
-            }, 1000);
-
-        }
-
-
-
-        async function savePasswordLogic() {
-
-            const newPass = document.getElementById('newPass').value;
-
-            const confPass = document.getElementById('confPass').value;
-
-            if (!newPass || newPass !== confPass) {
-
-                alert("Data tidak valid atau konfirmasi password salah!");
-
-                return;
-
+            if (biodata) {
+                // Update Nama (Instruksi 5)
+                document.getElementById('userName').innerText = loggedInUser;
+                // Update NIPY (Instruksi 6)
+                document.getElementById('userNIPY').innerText = "NIPY: " + (biodata.nip || "-");
+                // Update Jabatan Utama | Tugas Tambahan (Instruksi 7)
+                document.getElementById('userRole').innerText = `${biodata.jabatan} | ${biodata.tugasTambahan}`;
+                // Update Foto jika tersedia
+                if(biodata.foto) document.getElementById('userPhoto').src = biodata.foto;
             }
-
-            alert('Proses enkripsi dan pengiriman data ke server...');
-
-            closeModal('modalPassword');
-
+        } catch (error) {
+            console.error("Gagal memuat data dari Spreadsheet:", error);
         }
-
-
-
-        window.onclick = function(e) {
-
-            if (e.target.classList.contains('modal')) e.target.classList.remove('show');
-
-            if (!e.target.closest('.menu-container')) document.getElementById('dropdownMenu').classList.remove('active');
-
-        }
-
-        ### 2. Logika JavaScript (Koneksi ke Code.gs)
-Tambahkan fungsi ini di dalam tag `<script>` Anda untuk menarik data dari Spreadsheet berdasarkan nama yang login.
-
-```javascript
-// Simulasi Nama User yang sedang login (bisa didapat dari sistem login Anda)
-const loggedInUser = "Bpk. Kepala Sekolah, M.Pd."; 
-
-async function loadUserData() {
-    const webAppUrl = "https://script.google.com/macros/s/AKfycbx4K4zFt99EquOI5tis0DrywRUrJxhAFxTHQJiwUaI0SESVKGPOW6Kwg5AzWxWKb5wt/exec"; // Masukkan URL deployment Code.gs Anda
-    
-    try {
-        const response = await fetch(webAppUrl);
-        const data = await response.json();
-        const biodata = data.biodata[loggedInUser];
-
-        if (biodata) {
-            // Update UI dengan data dari Sheet Biodata
-            document.getElementById('userName').innerText = loggedInUser;
-            // NIPY mengambil data dari kolom NIP (Index 2 di GS)
-            document.getElementById('userNIPY').innerText = "NIPY: " + (biodata.nip || "-");
-            // Jabatan Utama | Tugas Tambahan
-            document.getElementById('userRole').innerText = `${biodata.jabatan} | ${biodata.tugasTambahan}`;
-            // Foto Profil
-            if(biodata.foto) document.getElementById('userPhoto').src = biodata.foto;
-        }
-    } catch (error) {
-        console.error("Gagal memuat data:", error);
     }
-}
 
-// Jalankan fungsi saat halaman dimuat
-window.onload = function() {
-    loadUserData();
-    // Inisialisasi tanggal
-    const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    document.getElementById('currentDate').innerText = new Date().toLocaleDateString('id-ID', dateOptions);
-};
+    // 3. Logika Navigasi & Menu (DISETEL ULANG AGAR BERFUNGSI)
+    function toggleMenu() {
+        // Mencegah event "onclick" di window langsung menutup menu kembali
+        event.stopPropagation(); 
+        document.getElementById('dropdownMenu').classList.toggle('active');
+    }
 
-    </script>
+    function openModal(id) { 
+        document.getElementById(id).classList.add('show'); 
+        document.getElementById('dropdownMenu').classList.remove('active'); 
+    }
+
+    function closeModal(id) { 
+        document.getElementById(id).classList.remove('show'); 
+    }
+
+    // 4. Logika Penutupan Klik Luar (DIPERBAIKI)
+    window.onclick = function(e) {
+        // Tutup modal jika area luar diklik
+        if (e.target.classList.contains('modal')) {
+            e.target.classList.remove('show');
+        }
+        // Tutup menu jika klik dilakukan di luar container menu
+        if (!e.target.closest('.menu-container')) {
+            document.getElementById('dropdownMenu').classList.remove('active');
+        }
+    }
+
+    // 5. Fungsi-fungsi Tambahan
+    function logoutAction() {
+        if(confirm('Akhiri sesi aman Anda?')) { window.location.href = 'index.html'; }
+    }
+
+    function refreshData() {
+        const icon = document.querySelector('.fa-sync-alt');
+        icon.classList.add('fa-spin');
+        loadUserData().then(() => {
+            setTimeout(() => { 
+                icon.classList.remove('fa-spin'); 
+                alert('Sinkronisasi Data Berhasil!');
+            }, 800);
+        });
+    }
+
+    async function savePasswordLogic() {
+        const newPass = document.getElementById('newPass').value;
+        const confPass = document.getElementById('confPass').value;
+        if (!newPass || newPass !== confPass) {
+            alert("Data tidak valid atau konfirmasi password salah!");
+            return;
+        }
+        alert('Proses enkripsi dan pengiriman data ke server...');
+        closeModal('modalPassword');
+    }
+</script>
 
 </body>
 
