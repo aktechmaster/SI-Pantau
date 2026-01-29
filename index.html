@@ -14,8 +14,8 @@
         }
 
         body {
-            /* Latar belakang nuansa teknologi gelap */
-            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+            /* Latar belakang diubah menjadi lebih cerah dan lembut */
+            background: linear-gradient(135deg, #e0f2f1 0%, #e3f2fd 50%, #f3e5f5 100%);
             height: 100vh;
             display: flex;
             justify-content: center;
@@ -24,34 +24,34 @@
             position: relative;
         }
 
-        /* Elemen dekoratif latar belakang (lingkaran cahaya) */
+        /* Elemen dekoratif latar belakang (warna lebih cerah) */
         .circle {
             position: absolute;
             border-radius: 50%;
-            background: linear-gradient(to right, #00c6ff, #0072ff);
-            opacity: 0.4;
-            filter: blur(80px);
+            background: linear-gradient(to right, #4facfe, #00f2fe);
+            opacity: 0.3;
+            filter: blur(60px);
             z-index: 0;
         }
-        .c1 { width: 300px; height: 300px; top: 10%; left: 20%; }
-        .c2 { width: 250px; height: 250px; bottom: 10%; right: 20%; background: linear-gradient(to right, #7f00ff, #e100ff); }
+        .c1 { width: 350px; height: 350px; top: -5%; left: 10%; }
+        .c2 { width: 300px; height: 300px; bottom: 5%; right: 10%; background: linear-gradient(to right, #f093fb, #f5576c); }
 
-        /* Wadah Login (Efek Glassmorphism) */
+        /* Wadah Login (Efek Glassmorphism Terang) */
         .login-container {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.7); /* Lebih putih transparan */
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
             border-radius: 20px;
             padding: 40px;
             width: 400px;
             text-align: center;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
             z-index: 1;
-            color: #fff;
+            color: #333; /* Teks diubah ke gelap agar terbaca */
         }
 
-        /* Wadah Logo Baru */
+        /* Wadah Logo */
         .logo-container {
             margin: 0 auto 20px;
             text-align: center;
@@ -61,19 +61,20 @@
         .logo-img {
             width: 80px;
             height: 80px;
-            object-fit: contain; /* Menjaga proporsi gambar */
-            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5)); /* Efek cahaya pada logo */
+            object-fit: contain;
+            filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.1));
         }
 
         h2 {
             margin-bottom: 5px;
-            font-weight: 600;
+            font-weight: 700;
             letter-spacing: 1px;
+            color: #1a73e8; /* Warna biru cerah untuk judul */
         }
         
         p.subtitle {
             font-size: 0.9em;
-            color: #ddd;
+            color: #666;
             margin-bottom: 30px;
         }
 
@@ -88,58 +89,61 @@
             display: block;
             margin-bottom: 8px;
             font-size: 0.9em;
-            color: #b0c4de;
+            color: #555;
+            font-weight: 500;
         }
 
         .input-group input {
             width: 100%;
             padding: 12px 15px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid #ddd;
             border-radius: 8px;
-            color: #fff;
+            color: #333;
             font-size: 1em;
             outline: none;
             transition: 0.3s;
         }
 
         .input-group input:focus {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: #00c6ff;
-            box-shadow: 0 0 10px rgba(0, 198, 255, 0.3);
+            background: #fff;
+            border-color: #4facfe;
+            box-shadow: 0 0 8px rgba(79, 172, 254, 0.2);
         }
 
-        /* Tombol Login */
+        /* Tombol Login (Biru Cerah) */
         .btn-login {
             width: 100%;
             padding: 12px;
-            background: linear-gradient(to right, #00c6ff, #0072ff);
+            background: linear-gradient(to right, #4facfe, #0072ff);
             border: none;
             border-radius: 8px;
             color: #fff;
             font-size: 1em;
             font-weight: bold;
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: all 0.2s;
             margin-top: 10px;
+            box-shadow: 0 4px 15px rgba(0, 114, 255, 0.2);
         }
 
         .btn-login:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 198, 255, 0.4);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(0, 114, 255, 0.3);
+            filter: brightness(1.1);
         }
 
-        /* Footer kecil */
+        /* Footer */
         .footer {
-            margin-top: 20px;
+            margin-top: 25px;
             font-size: 0.8em;
-            color: rgba(255, 255, 255, 0.5);
+            color: #888;
         }
         
         /* Pesan Error */
         #error-msg {
-            color: #ff6b6b;
-            font-size: 0.9em;
+            color: #e53935;
+            font-size: 0.85em;
             margin-top: 10px;
             display: none;
         }
@@ -177,6 +181,9 @@
             &copy; 2026 <span>aktechmaster</span> <br> Designed & Developed by aktechmaster
         </div>
     </div>
+
+</body>
+</html>
 
     <script>
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxjOtLl18ZvhzJnvGYGBiOki7UmjjeinUdFecOtBVqYgY6BrgVvMXgZKHNRouSoJgA2ew/exec"; 
