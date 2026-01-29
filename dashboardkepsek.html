@@ -303,56 +303,33 @@
     <div id="dashboard-container">
 
         <nav class="navbar">
+    <div class="navbar-brand">
+        <img src="logosmpit.png" alt="Logo" style="height: 30px; margin-right: 10px;"> SMPIT Al-Kautsar
+    </div>
+    <div class="navbar-date" id="currentDate" style="font-weight: 700; color: var(--text-main);"></div>
+    <div class="menu-container">
+        <div class="menu-toggle" onclick="toggleMenu()"><i class="fas fa-bars"></i></div>
+        <div class="dropdown-menu" id="dropdownMenu">
+            <a href="#" onclick="refreshData()"><i class="fas fa-sync-alt"></i> Refresh Data</a>
+            <a href="#" onclick="openModal('modalAbout')"><i class="fas fa-info-circle"></i> Tentang</a>
+            <a href="#" onclick="openModal('modalPassword')"><i class="fas fa-shield-alt"></i> Keamanan</a>
+            <div class="dropdown-divider" style="height: 1px; background: #eee;"></div>
+            <a href="#" onclick="logoutAction()" style="color: #ff4757;"><i class="fas fa-power-off" style="color: #ff4757;"></i> Keluar</a>
+        </div>
+    </div>
+</nav>
 
-            <div class="navbar-brand">
-
-                <i class="fas fa-microchip"></i> SMPIT Al-Kautsar
-
-            </div>
-
-            <div class="navbar-date" id="currentDate"></div>
-
-            <div class="menu-container">
-
-                <div class="menu-toggle" onclick="toggleMenu()"><i class="fas fa-ellipsis-v"></i></div>
-
-                <div class="dropdown-menu" id="dropdownMenu">
-
-                    <a href="#" onclick="refreshData()"><i class="fas fa-sync-alt"></i> Refresh Data</a>
-
-                    <a href="#" onclick="openModal('modalAbout')"><i class="fas fa-info-circle"></i> Tentang</a>
-
-                    <a href="#" onclick="openModal('modalPassword')"><i class="fas fa-shield-alt"></i> Keamanan</a>
-
-                    <div class="dropdown-divider" style="height: 1px; background: #eee;"></div>
-
-                    <a href="#" onclick="logoutAction()" style="color: #ff4757;"><i class="fas fa-power-off" style="color: #ff4757;"></i> Keluar</a>
-
-                </div>
-
-            </div>
-
-        </nav>
-
-
-
-        <div class="container">
-
-            <div class="welcome-card">
-
-                <div class="welcome-text">
-
-                    <h1>SI PANTAU</h1>
-
-                    <h2>Bpk. Kepala Sekolah, M.Pd.</h2>
-
-                    <p style="color: var(--text-soft); font-size: 0.9rem;">ID Sistem: 12345678 • Administrator Utama</p>
-
-                </div>
-
-                <img src="https://i.pravatar.cc/150?img=11" alt="Profile" class="profile-pic">
-
-            </div>
+<div class="container">
+    <div class="welcome-card">
+        <div class="welcome-text">
+            <h1 id="welcomeGreeting">Selamat Datang,</h1>
+            <h2 id="userName">Memuat Nama...</h2>
+            <p id="userNIPY" style="color: var(--text-soft); font-size: 0.9rem; margin-top: 5px;">NIPY: -</p>
+            <p id="userRole" style="color: var(--text-soft); font-size: 0.9rem;">Jabatan | Tugas Tambahan</p>
+            <p style="color: var(--primary-tech); font-weight: 700; font-size: 0.85rem; margin-top: 10px; letter-spacing: 1px;">SI PANTAU</p>
+        </div>
+        <img id="userPhoto" src="https://via.placeholder.com/150" alt="Profile" class="profile-pic">
+    </div>
 
 
 
@@ -581,6 +558,44 @@
             if (!e.target.closest('.menu-container')) document.getElementById('dropdownMenu').classList.remove('active');
 
         }
+
+        ### 2. Logika JavaScript (Koneksi ke Code.gs)
+Tambahkan fungsi ini di dalam tag `<script>` Anda untuk menarik data dari Spreadsheet berdasarkan nama yang login.
+
+```javascript
+// Simulasi Nama User yang sedang login (bisa didapat dari sistem login Anda)
+const loggedInUser = "Bpk. Kepala Sekolah, M.Pd."; 
+
+async function loadUserData() {
+    const webAppUrl = "https://script.google.com/macros/s/AKfycbx4K4zFt99EquOI5tis0DrywRUrJxhAFxTHQJiwUaI0SESVKGPOW6Kwg5AzWxWKb5wt/exec"; // Masukkan URL deployment Code.gs Anda
+    
+    try {
+        const response = await fetch(webAppUrl);
+        const data = await response.json();
+        const biodata = data.biodata[loggedInUser];
+
+        if (biodata) {
+            // Update UI dengan data dari Sheet Biodata
+            document.getElementById('userName').innerText = loggedInUser;
+            // NIPY mengambil data dari kolom NIP (Index 2 di GS)
+            document.getElementById('userNIPY').innerText = "NIPY: " + (biodata.nip || "-");
+            // Jabatan Utama | Tugas Tambahan
+            document.getElementById('userRole').innerText = `${biodata.jabatan} | ${biodata.tugasTambahan}`;
+            // Foto Profil
+            if(biodata.foto) document.getElementById('userPhoto').src = biodata.foto;
+        }
+    } catch (error) {
+        console.error("Gagal memuat data:", error);
+    }
+}
+
+// Jalankan fungsi saat halaman dimuat
+window.onload = function() {
+    loadUserData();
+    // Inisialisasi tanggal
+    const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    document.getElementById('currentDate').innerText = new Date().toLocaleDateString('id-ID', dateOptions);
+};
 
     </script>
 
