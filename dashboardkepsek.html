@@ -1,426 +1,222 @@
 <!DOCTYPE html>
-
 <html lang="id">
-
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Login Dashboard SI PANTAU</title>
-
+    <title>Dashboard Kepala Sekolah - SMPIT Al-Kautsar</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-
-        /* Reset dasar */
-
-        * {
-
-            margin: 0;
-
-            padding: 0;
-
-            box-sizing: border-box;
-
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-
+        :root {
+            --primary-orange: #ff7f00;
+            --secondary-orange: #e65100; 
+            --gradient: linear-gradient(135deg, var(--primary-orange) 0%, var(--secondary-orange) 100%);
+            --shadow: 0 10px 30px rgba(255, 127, 0, 0.3);
+            --card-bg: #fff;
+            --modal-btn-cyan: #00c3ff;
+            --modal-btn-hover: #00b3ea;
         }
 
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background-color: #f4f6f9; color: #333; padding-bottom: 50px; }
 
-
-        body {
-
-            /* Latar belakang nuansa teknologi gelap */
-
-            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
-
-            height: 100vh;
-
-            display: flex;
-
-            justify-content: center;
-
-            align-items: center;
-
-            overflow: hidden;
-
-            position: relative;
-
+        /* --- DASHBOARD CONTAINER --- */
+        #dashboard-container {
+            display: block; 
         }
 
-
-
-        /* Elemen dekoratif latar belakang (lingkaran cahaya) */
-
-        .circle {
-
-            position: absolute;
-
-            border-radius: 50%;
-
-            background: linear-gradient(to right, #00c6ff, #0072ff);
-
-            opacity: 0.4;
-
-            filter: blur(80px);
-
-            z-index: 0;
-
+        /* --- Navbar --- */
+        .navbar {
+            background: var(--gradient);
+            padding: 15px 30px;
+            display: flex; justify-content: space-between; align-items: center;
+            color: white; box-shadow: 0 4px 15px rgba(255, 127, 0, 0.2); position: relative;
         }
+        .navbar-brand { display: flex; align-items: center; font-weight: bold; font-size: 1.1rem; }
+        .navbar-brand i { margin-right: 10px; font-size: 1.5rem; }
+        .navbar-date { font-size: 0.9rem; opacity: 0.95; }
+        @media (max-width: 768px) { .navbar-date { display: none; } }
 
-        .c1 { width: 300px; height: 300px; top: 10%; left: 20%; }
-
-        .c2 { width: 250px; height: 250px; bottom: 10%; right: 20%; background: linear-gradient(to right, #7f00ff, #e100ff); }
-
-
-
-        /* Wadah Login (Efek Glassmorphism) */
-
-        .login-container {
-
-            background: rgba(255, 255, 255, 0.1);
-
-            backdrop-filter: blur(15px);
-
-            -webkit-backdrop-filter: blur(15px);
-
-            border: 1px solid rgba(255, 255, 255, 0.2);
-
-            border-radius: 20px;
-
-            padding: 40px;
-
-            width: 400px;
-
-            text-align: center;
-
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-
-            z-index: 1;
-
-            color: #fff;
-
+        /* Dropdown Menu */
+        .menu-container { position: relative; }
+        .menu-toggle { cursor: pointer; font-size: 1.4rem; padding: 5px; transition: transform 0.2s; }
+        .menu-toggle:hover { transform: scale(1.1); }
+        .dropdown-menu {
+            display: none; position: absolute; top: 40px; right: 0;
+            background: white; width: 200px; border-radius: 8px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15); z-index: 2000;
+            overflow: hidden; animation: fadeIn 0.2s ease;
         }
-
-
-
-        /* Wadah Logo Baru */
-
-        .logo-container {
-
-            margin: 0 auto 20px;
-
-            text-align: center;
-
+        .dropdown-menu.active { display: block; }
+        .dropdown-menu a {
+            display: flex; align-items: center; padding: 12px 20px;
+            text-decoration: none; color: #555; font-size: 0.95rem; transition: background 0.2s;
         }
+        .dropdown-menu a i { margin-right: 10px; width: 20px; text-align: center; color: var(--secondary-orange); }
+        .dropdown-menu a:hover { background-color: #fef0e6; color: var(--secondary-orange); }
+        .dropdown-divider { height: 1px; background-color: #eee; margin: 0; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 
+        /* --- Content Styles --- */
+        .container { max-width: 1200px; margin: 20px auto; padding: 0 20px; }
         
+        .welcome-card {
+            background: var(--gradient); border-radius: 15px; padding: 40px; color: white;
+            display: flex; justify-content: space-between; align-items: center;
+            position: relative; overflow: hidden; box-shadow: var(--shadow); margin-bottom: 30px;
+        }
+        .welcome-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background: url('https://www.transparenttextures.com/patterns/cubes.png'); opacity: 0.15; mix-blend-mode: overlay;
+        }
+        .welcome-text h1 { font-size: 1.8rem; margin-bottom: 10px; }
+        .welcome-text h2 { font-size: 2.2rem; font-weight: 800; text-shadow: 2px 2px 10px rgba(0,0,0,0.15); }
+        .profile-pic { width: 120px; height: 120px; border-radius: 50%; border: 4px solid rgba(255,255,255,0.4); object-fit: cover; z-index: 1; }
 
-        /* Gaya Gambar Logo */
-
-        .logo-img {
-
-            width: 80px;
-
-            height: 80px;
-
-            object-fit: contain; /* Menjaga proporsi gambar */
-
-            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5)); /* Efek cahaya pada logo */
-
+        /* Grid Cards */
+        .grid-menu { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        .card {
+            background: var(--card-bg); border-radius: 12px; padding: 25px; text-align: center;
+            cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            min-height: 180px; display: flex; flex-direction: column; justify-content: center; align-items: center;
+            border-top: 4px solid transparent;
+        }
+        .card:hover { transform: translateY(-5px); box-shadow: var(--shadow); border-top: 4px solid var(--primary-orange); }
+        .card-icon { font-size: 2.5rem; background: linear-gradient(135deg, #FF8C00, #FFD700); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 15px; }
+        .pie-chart {
+            width: 80px; height: 80px; border-radius: 50%; position: relative;
+            display: flex; justify-content: center; align-items: center; margin-bottom: 15px;
+        }
+        .pie-chart::after {
+            content: attr(data-percent); position: absolute; background: white;
+            width: 60px; height: 60px; border-radius: 50%; display: flex;
+            justify-content: center; align-items: center; font-weight: bold; color: var(--primary-orange);
         }
 
-
-
-        h2 {
-
-            margin-bottom: 5px;
-
-            font-weight: 600;
-
-            letter-spacing: 1px;
-
+        /* --- MODALS --- */
+        .modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6); z-index: 3000; justify-content: center; align-items: center;
+            opacity: 0; transition: opacity 0.3s ease;
         }
-
-        
-
-        p.subtitle {
-
-            font-size: 0.9em;
-
-            color: #ddd;
-
-            margin-bottom: 30px;
-
-        }
-
-
-
-        /* Input Form */
-
-        .input-group {
-
-            position: relative;
-
-            margin-bottom: 20px;
-
-            text-align: left;
-
-        }
-
-
-
-        .input-group label {
-
-            display: block;
-
-            margin-bottom: 8px;
-
-            font-size: 0.9em;
-
-            color: #b0c4de;
-
-        }
-
-
-
-        .input-group input {
-
-            width: 100%;
-
-            padding: 12px 15px;
-
-            background: rgba(255, 255, 255, 0.05);
-
-            border: 1px solid rgba(255, 255, 255, 0.2);
-
-            border-radius: 8px;
-
-            color: #fff;
-
-            font-size: 1em;
-
-            outline: none;
-
-            transition: 0.3s;
-
-        }
-
-
-
-        .input-group input:focus {
-
-            background: rgba(255, 255, 255, 0.1);
-
-            border-color: #00c6ff;
-
-            box-shadow: 0 0 10px rgba(0, 198, 255, 0.3);
-
-        }
-
-
-
-        /* Tombol Login */
-
-        .btn-login {
-
-            width: 100%;
-
-            padding: 12px;
-
-            background: linear-gradient(to right, #00c6ff, #0072ff);
-
-            border: none;
-
-            border-radius: 8px;
-
-            color: #fff;
-
-            font-size: 1em;
-
-            font-weight: bold;
-
-            cursor: pointer;
-
-            transition: transform 0.2s, box-shadow 0.2s;
-
-            margin-top: 10px;
-
-        }
-
-
-
-        .btn-login:hover {
-
-            transform: translateY(-2px);
-
-            box-shadow: 0 5px 15px rgba(0, 198, 255, 0.4);
-
-        }
-
-
-
-        /* Footer kecil */
-
-        .footer {
-
-            margin-top: 20px;
-
-            font-size: 0.8em;
-
-            color: rgba(255, 255, 255, 0.5);
-
-        }
-
-        
-
-        /* Pesan Error */
-
-        #error-msg {
-
-            color: #ff6b6b;
-
-            font-size: 0.9em;
-
-            margin-top: 10px;
-
-            display: none;
-
-        }
-
+        .modal.show { display: flex; opacity: 1; }
+
+        /* Modal Styles */
+        .modal-content-absensi { background: white; padding: 30px; border-radius: 10px; width: 90%; max-width: 500px; position: relative; border-top: 5px solid var(--primary-orange); }
+        .modal-content-about { background: white; padding: 40px 30px; border-radius: 20px; width: 90%; max-width: 350px; text-align: center; position: relative; }
+        .modal-content-password { background: white; padding: 25px; border-radius: 15px; width: 90%; max-width: 400px; position: relative; }
+
+        /* Common Elements */
+        .btn-cyan { background: var(--modal-btn-cyan); color: white; border: none; padding: 12px 0; width: 100%; border-radius: 25px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .btn-cyan:hover { background: var(--modal-btn-hover); transform: scale(1.02); }
+        .form-input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; margin-bottom: 15px; outline: none; }
+        .form-input:focus { border-color: var(--modal-btn-cyan); }
+        .attendance-list { list-style: none; margin-top: 20px; }
+        .attendance-list li { padding: 10px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; }
+        .tag-absent { background: #ffebee; color: #c62828; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; }
+        .close-x { cursor: pointer; float: right; font-size: 1.5rem; }
+
+        .footer { text-align: center; margin-top: 50px; font-size: 0.8rem; color: #999; }
     </style>
-
 </head>
-
 <body>
 
+    <div id="dashboard-container">
+        <nav class="navbar">
+            <div class="navbar-brand">
+                <i class="fas fa-school"></i> SMPIT Al-Kautsar
+            </div>
+            <div class="navbar-date" id="currentDate">Rabu, 28 Januari 2026</div>
+            <div class="menu-container">
+                <div class="menu-toggle" onclick="toggleMenu()"><i class="fas fa-bars"></i></div>
+                <div class="dropdown-menu" id="dropdownMenu">
+                    <a href="#" onclick="refreshData()"><i class="fas fa-sync-alt"></i> Refresh Data</a>
+                    <a href="#" onclick="openModal('modalAbout')"><i class="fas fa-info-circle"></i> Tentang</a>
+                    <a href="#" onclick="openModal('modalPassword')"><i class="fas fa-key"></i> Ubah Password</a>
+                    <div class="dropdown-divider"></div>
+                    <a href="#" onclick="logoutAction()" style="color: #d9534f;"><i class="fas fa-sign-out-alt" style="color: #d9534f;"></i> Logout</a>
+                </div>
+            </div>
+        </nav>
 
-
-    <div class="circle c1"></div>
-
-    <div class="circle c2"></div>
-
-
-
-    <div class="login-container">
-
-        <div class="logo-container">
-
-            <img src="logosmpit.png" alt="Logo SMPIT" class="logo-img">
-
-        </div>
-
-
-
-        <h2>SI PANTAU</h2>
-
-        <p class="subtitle">SIT Al-Kautsar Mukomuko</p>
-
-
-
-        <form id="loginForm">
-
-            <div class="input-group">
-
-                <label for="username">Username</label>
-
-                <input type="text" id="username" placeholder="Masukkan username" required>
-
+        <div class="container">
+            <div class="welcome-card">
+                <div class="welcome-text">
+                    <h1>Selamat Datang,</h1>
+                    <h2>Bpk. Kepala Sekolah, M.Pd.</h2>
+                    <p>NIPY: 12345678 | Kepala Sekolah</p>
+                </div>
+                <img src="https://i.pravatar.cc/150?img=11" alt="Profile" class="profile-pic">
             </div>
 
-            
-
-            <div class="input-group">
-
-                <label for="password">Password</label>
-
-                <input type="password" id="password" placeholder="Masukkan password" required>
-
+            <div class="grid-menu">
+                <div class="card" onclick="alert('Membuka detail Jurnal Harian...')">
+                    <div class="pie-chart" style="background: conic-gradient(var(--primary-orange) 85% 0%, #eee 0% 100%);" data-percent="85%"></div>
+                    <h3>Jurnal Harian</h3><p>Keterisian guru hari ini</p>
+                </div>
+                <div class="card" onclick="alert('Membuka detail Jurnal Bulanan...')">
+                    <div class="pie-chart" style="background: conic-gradient(var(--primary-orange) 92% 0%, #eee 0% 100%);" data-percent="92%"></div>
+                    <h3>Jurnal Bulanan</h3><p>Akumulasi Januari</p>
+                </div>
+                <div class="card" onclick="openModal('modalAbsensi')">
+                    <div class="card-icon"><i class="fas fa-user-times"></i></div>
+                    <h3>Absensi Karyawan</h3><p style="color: red; font-weight: bold;">3 Orang Tidak Hadir</p>
+                </div>
+                <div class="card" onclick="alert('Masuk ke Database Pegawai...')">
+                    <div class="card-icon"><i class="fas fa-id-card"></i></div>
+                    <h3>Daftar Pegawai</h3><p>Database Guru & Staff</p>
+                </div>
+                 <div class="card" onclick="alert('Membuka Notulen...')">
+                    <div class="card-icon"><i class="fas fa-file-signature"></i></div>
+                    <h3>Notulen Rapat</h3><p>Arsip Digital</p>
+                </div>
+                <div class="card" onclick="alert('Membuka Mutabaah...')">
+                    <div class="card-icon"><i class="fas fa-mosque"></i></div>
+                    <h3>Mutabaah</h3><p>Ibadah Harian</p>
+                </div>
             </div>
 
-
-
-            <button type="submit" class="btn-login">MASUK PORTAL</button>
-
-            <p id="error-msg">Username atau Password salah!</p>
-
-        </form>
-
-
-
-        <div class="footer">
-
-            &copy; 2026 <span>aktechmaster</span> <br> Designed & Developed by aktechmaster
-
+            <div class="footer">&copy; 2026 Tim IT SMPIT Al-Kautsar | Executive Dashboard System</div>
         </div>
-
     </div>
 
-    <script>
-        function toggleMenu() {
-            document.getElementById('dropdownMenu').classList.toggle('active');
-        }
-        // Menutup dropdown jika klik di luar
-        window.onclick = function(event) {
-            if (!event.target.matches('.menu-toggle') && !event.target.matches('.fa-shapes')) {
-                var dropdowns = document.getElementsByClassName("dropdown-menu");
-                for (var i = 0; i < dropdowns.length; i++) {
-                    var openDropdown = dropdowns[i];
-                    if (openDropdown.classList.contains('active')) {
-                        openDropdown.classList.remove('active');
-                    }
-                }
-            }
-        }
-    </script>
-</body>
-</html>
+    <div class="modal" id="modalAbsensi">
+        <div class="modal-content-absensi">
+            <span class="close-x" onclick="closeModal('modalAbsensi')">&times;</span>
+            <h2 style="color: var(--primary-orange);"><i class="fas fa-exclamation-circle"></i> Ketidakhadiran</h2>
+            <ul class="attendance-list">
+                <li><span>Ahmad Fauzi</span><span class="tag-absent">Sakit</span></li>
+                <li><span>Siti Aminah</span><span class="tag-absent">Izin</span></li>
+                <li><span>Budi Santoso</span><span class="tag-absent">Tanpa Ket.</span></li>
+            </ul>
+        </div>
+    </div>
 
-    <script>
-        function toggleMenu() {
-            document.getElementById('dropdownMenu').classList.toggle('active');
-        }
-        function openModal(id) {
-            document.getElementById(id).style.display = 'flex';
-        }
-        function closeModal(id) {
-            document.getElementById(id).style.display = 'none';
-        }
-        // Menutup dropdown jika klik di luar
-        window.onclick = function(event) {
-            if (!event.target.matches('.menu-toggle') && !event.target.matches('.fa-th-large')) {
-                var dropdowns = document.getElementsByClassName("dropdown-menu");
-                for (var i = 0; i < dropdowns.length; i++) {
-                    dropdowns[i].classList.remove('active');
-                }
-            }
-        }
-    </script>
-</body>
-</html>
+    <div class="modal" id="modalAbout">
+        <div class="modal-content-about">
+            <div style="font-size: 4rem; margin-bottom: 20px;">
+                <i class="fas fa-laptop-code" style="color: #9575cd;"></i>
+            </div>
+            <h3>Tentang Aplikasi</h3>
+            <p style="color:#888;">DIGITAL v1.0</p>
+            <p style="color:#888; margin-bottom: 20px;">Developed by aktechmaster</p>
+            <button class="btn-cyan" onclick="closeModal('modalAbout')">Siap!</button>
+        </div>
+    </div>
 
-    <script>
-        function toggleMenu() {
-            document.getElementById('dropdownMenu').classList.toggle('active');
-        }
-        function openModal(id) {
-            document.getElementById(id).classList.add('show');
-        }
-        function closeModal(id) {
-            document.getElementById(id).classList.remove('show');
-        }
-        // Menutup dropdown saat klik di luar
-        window.onclick = function(event) {
-            if (!event.target.matches('.menu-toggle') && !event.target.matches('.fa-ellipsis-v')) {
-                var dropdowns = document.getElementsByClassName("dropdown-menu");
-                for (var i = 0; i < dropdowns.length; i++) {
-                    dropdowns[i].classList.remove('active');
-                }
-            }
-        }
-    </script>
-</body>
-</html>
+    <div class="modal" id="modalPassword">
+        <div class="modal-content-password">
+            <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
+                <h3>Ganti Password</h3><span class="close-x" onclick="closeModal('modalPassword')">&times;</span>
+            </div>
+            <p style="color:#666; font-size:0.9rem; margin-bottom:20px;">Lakukan perubahan password secara berkala untuk keamanan.</p>
+            
+            <input type="password" id="oldPass" class="form-input" placeholder="Password Lama (Saat ini)">
+            <input type="password" id="newPass" class="form-input" placeholder="Password Baru (Min. 6 Karakter)">
+            <input type="password" id="confPass" class="form-input" placeholder="Konfirmasi Password Baru">
+            
+            <button class="btn-cyan" onclick="savePasswordLogic()">Simpan Password</button>
+        </div>
+    </div>
 
     <script>
         // Tanggal
@@ -553,4 +349,3 @@
     </script>
 </body>
 </html>
-
