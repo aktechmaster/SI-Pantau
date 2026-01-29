@@ -321,18 +321,16 @@
     </div>
 </nav>
 
-<div class="container">
-    <div class="welcome-card">
-        <div class="welcome-text">
-            <h1 id="welcomeGreeting">Selamat Datang,</h1>
-            <h2 id="userName">Memuat Nama...</h2>
-            <p id="userNIPY" style="color: var(--text-soft); font-size: 0.9rem; margin-top: 5px;">NIPY: -</p>
-            <p id="userRole" style="color: var(--text-soft); font-size: 0.9rem;">Jabatan | Tugas Tambahan</p>
-            <p style="color: var(--primary-tech); font-weight: 700; font-size: 0.85rem; margin-top: 10px; letter-spacing: 1px;">SI PANTAU</p>
-        </div>
-        <img id="userPhoto" src="https://via.placeholder.com/150" alt="Profile" class="profile-pic">
+<div class="welcome-card">
+    <div class="welcome-text">
+        <h1 id="welcomeGreeting">Selamat Datang,</h1>
+        <h2 id="userName">Memuat Nama...</h2>
+        <p id="userNIPY" style="color: var(--text-soft); font-size: 0.9rem; margin-top: 5px;">NIPY: -</p>
+        <p id="userRole" style="color: var(--text-soft); font-size: 0.9rem;">Jabatan | Tugas Tambahan</p>
+        <p style="color: var(--primary-tech); font-weight: 700; font-size: 0.85rem; margin-top: 10px; letter-spacing: 1px;">SI PANTAU</p>
     </div>
-
+    <img id="userPhoto" src="https://via.placeholder.com/150" alt="Profile" class="profile-pic">
+</div>
 
 
             <div class="grid-menu">
@@ -482,49 +480,74 @@
 
 
     <script>
-    // Konfigurasi Awal
+    // --- KONFIGURASI ---
+    // Nama ini harus sama persis dengan yang ada di kolom "Nama Lengkap" di Spreadsheet
     const loggedInUser = "Bpk. Kepala Sekolah, M.Pd."; 
     const webAppUrl = "https://script.google.com/macros/s/AKfycbx4K4zFt99EquOI5tis0DrywRUrJxhAFxTHQJiwUaI0SESVKGPOW6Kwg5AzWxWKb5wt/exec";
 
-    // 1. Inisialisasi Data Saat Halaman Dimuat
+    // --- 1. INISIALISASI HALAMAN ---
     window.onload = function() {
-        // Jalankan fungsi update tanggal
+        // Set Tanggal di Navbar (Tebal)
         const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
         document.getElementById('currentDate').innerText = new Date().toLocaleDateString('id-ID', dateOptions);
         
-        // Ambil data dari database Spreadsheet
+        // Ambil Data dari Spreadsheet
         loadUserData();
     };
 
-    // 2. Fungsi Ambil Data dari Backend (Code.gs)
+    // --- 2. FUNGSI AMBIL DATA (KONEKSI SPREADSHEET) ---
     async function loadUserData() {
         try {
             const response = await fetch(webAppUrl);
             const data = await response.json();
-            const biodata = data.biodata[loggedInUser]; // Mengambil data berdasarkan nama
+            
+            // Mencari data user di dalam objek 'biodata' (Sesuai struktur Code.gs Anda)
+            const biodata = data.biodata[loggedInUser];
 
             if (biodata) {
-                // Update Nama (Instruksi 5)
+                // Update Nama Lengkap
                 document.getElementById('userName').innerText = loggedInUser;
-                // Update NIPY (Instruksi 6)
+                
+                // Update NIPY (Mengambil dari properti 'nip' di Code.gs)
                 document.getElementById('userNIPY').innerText = "NIPY: " + (biodata.nip || "-");
-                // Update Jabatan Utama | Tugas Tambahan (Instruksi 7)
-                document.getElementById('userRole').innerText = `${biodata.jabatan} | ${biodata.tugasTambahan}`;
-                // Update Foto jika tersedia
-                if(biodata.foto) document.getElementById('userPhoto').src = biodata.foto;
+                
+                // Update Jabatan Utama | Tugas Tambahan
+                const jabatan = biodata.jabatan || "-";
+                const tugas = biodata.tugasTambahan || "-";
+                document.getElementById('userRole').innerText = `${jabatan} | ${tugas}`;
+                
+                // Update Foto Profil jika link tersedia
+                if(biodata.foto && biodata.foto.includes("http")) {
+                    document.getElementById('userPhoto').src = biodata.foto;
+                }
+            } else {
+                document.getElementById('userName').innerText = "User Tidak Ditemukan";
             }
         } catch (error) {
-            console.error("Gagal memuat data dari Spreadsheet:", error);
+            console.error("Error Koneksi Database:", error);
+            document.getElementById('userName').innerText = "Gagal Memuat Data";
         }
     }
 
-    // 3. Logika Navigasi & Menu (DISETEL ULANG AGAR BERFUNGSI)
+    // --- 3. LOGIKA MENU (FIX GARIS TIGA) ---
     function toggleMenu() {
-        // Mencegah event "onclick" di window langsung menutup menu kembali
+        // StopPropagation agar klik tidak dianggap klik ke luar (window.onclick)
         event.stopPropagation(); 
         document.getElementById('dropdownMenu').classList.toggle('active');
     }
 
+    // Menutup menu jika klik di mana saja di luar menu
+    window.onclick = function(e) {
+        if (!e.target.closest('.menu-container')) {
+            document.getElementById('dropdownMenu').classList.remove('active');
+        }
+        // Logika tutup modal
+        if (e.target.classList.contains('modal')) {
+            e.target.classList.remove('show');
+        }
+    }
+
+    // --- 4. FUNGSI PENDUKUNG ---
     function openModal(id) { 
         document.getElementById(id).classList.add('show'); 
         document.getElementById('dropdownMenu').classList.remove('active'); 
@@ -534,43 +557,19 @@
         document.getElementById(id).classList.remove('show'); 
     }
 
-    // 4. Logika Penutupan Klik Luar (DIPERBAIKI)
-    window.onclick = function(e) {
-        // Tutup modal jika area luar diklik
-        if (e.target.classList.contains('modal')) {
-            e.target.classList.remove('show');
-        }
-        // Tutup menu jika klik dilakukan di luar container menu
-        if (!e.target.closest('.menu-container')) {
-            document.getElementById('dropdownMenu').classList.remove('active');
-        }
-    }
-
-    // 5. Fungsi-fungsi Tambahan
-    function logoutAction() {
-        if(confirm('Akhiri sesi aman Anda?')) { window.location.href = 'index.html'; }
-    }
-
     function refreshData() {
         const icon = document.querySelector('.fa-sync-alt');
         icon.classList.add('fa-spin');
         loadUserData().then(() => {
             setTimeout(() => { 
                 icon.classList.remove('fa-spin'); 
-                alert('Sinkronisasi Data Berhasil!');
-            }, 800);
+                alert('Data Berhasil Diperbarui!');
+            }, 500);
         });
     }
 
-    async function savePasswordLogic() {
-        const newPass = document.getElementById('newPass').value;
-        const confPass = document.getElementById('confPass').value;
-        if (!newPass || newPass !== confPass) {
-            alert("Data tidak valid atau konfirmasi password salah!");
-            return;
-        }
-        alert('Proses enkripsi dan pengiriman data ke server...');
-        closeModal('modalPassword');
+    function logoutAction() {
+        if(confirm('Akhiri sesi aman Anda?')) { window.location.href = 'index.html'; }
     }
 </script>
 
