@@ -1,376 +1,238 @@
 <!DOCTYPE html>
-
 <html lang="id">
-
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Dashboard Kepala Sekolah - SMPIT Al-Kautsar</title>
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
     <style>
-
         :root {
-
-            /* Warna Oranye yang lebih lembut & elegan (Muted Orange) */
-
-            --primary-orange: #d35400; 
-
-            --secondary-orange: #e67e22; 
-
-            --soft-orange: rgba(211, 84, 0, 0.08);
-
-            --gradient: linear-gradient(135deg, #e67e22 0%, #d35400 100%);
-
-            --shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
-
-            --card-bg: rgba(255, 255, 255, 0.9);
-
+            --primary-orange: #ff7e5f; 
+            --deep-orange: #feb47b;
+            --tech-blue: #00d2ff;
+            --glass: rgba(255, 255, 255, 0.8);
             --text-dark: #2c3e50;
-
-            --modal-btn-action: #2c3e50; /* Diubah ke warna gelap profesional */
-
-            --modal-btn-hover: #34495e;
-
+            --shadow-tech: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+            --gradient-futuristic: linear-gradient(135deg, #ff7e5f 0%, #feb47b 100%);
         }
 
-
-
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
-
-        body { background-color: #f8f9fa; color: var(--text-dark); padding-bottom: 50px; }
-
-
-
-        /* --- DASHBOARD CONTAINER --- */
-
-        #dashboard-container { display: block; }
-
-
-
-        /* --- Navbar (Elegan & Semi-Transparan) --- */
-
-        .navbar {
-
-            background: #fff;
-
-            padding: 15px 30px;
-
-            display: flex; justify-content: space-between; align-items: center;
-
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', 'Segoe UI', sans-serif; }
+        body { 
+            background-color: #f0f4f8; 
+            background-image: radial-gradient(circle at top right, rgba(255, 126, 95, 0.05), transparent),
+                              radial-gradient(circle at bottom left, rgba(0, 210, 255, 0.05), transparent);
             color: var(--text-dark); 
-
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05); 
-
-            position: sticky; top: 0; z-index: 1000;
-
-            border-bottom: 2px solid var(--soft-orange);
-
+            padding-bottom: 50px; 
+            min-height: 100vh;
         }
 
-        .navbar-brand { display: flex; align-items: center; font-weight: 700; font-size: 1.1rem; color: var(--primary-orange); }
-
-        .navbar-brand i { margin-right: 10px; font-size: 1.4rem; }
-
-        .navbar-date { font-size: 0.85rem; color: #7f8c8d; font-weight: 500; }
-
-
-
-        /* Dropdown Menu */
-
-        .menu-container { position: relative; }
-
-        .menu-toggle { cursor: pointer; font-size: 1.4rem; color: var(--primary-orange); transition: 0.3s; }
-
-        .dropdown-menu {
-
-            display: none; position: absolute; top: 40px; right: 0;
-
-            background: white; width: 200px; border-radius: 12px;
-
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1); z-index: 2000;
-
-            overflow: hidden; border: 1px solid #eee;
-
-        }
-
-        .dropdown-menu.active { display: block; }
-
-        .dropdown-menu a {
-
-            display: flex; align-items: center; padding: 12px 20px;
-
-            text-decoration: none; color: #555; font-size: 0.9rem; transition: 0.2s;
-
-        }
-
-        .dropdown-menu a i { margin-right: 10px; color: var(--secondary-orange); }
-
-        .dropdown-menu a:hover { background-color: var(--soft-orange); color: var(--primary-orange); }
-
-
-
-        /* --- Content Styles --- */
-
-        .container { max-width: 1100px; margin: 30px auto; padding: 0 20px; }
-
-        
-
-        .welcome-card {
-
-            background: var(--gradient); border-radius: 20px; padding: 40px; color: white;
-
+        /* --- NAVBAR: FUTURISTIC GLASS --- */
+        .navbar {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            padding: 12px 40px;
             display: flex; justify-content: space-between; align-items: center;
-
-            position: relative; overflow: hidden; box-shadow: 0 15px 35px rgba(211, 84, 0, 0.2); margin-bottom: 30px;
-
+            position: sticky; top: 0; z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+        }
+        .navbar-brand { 
+            display: flex; align-items: center; 
+            font-weight: 800; font-size: 1.2rem; 
+            letter-spacing: -0.5px;
+            background: var(--gradient-futuristic);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .navbar-brand i { 
+            margin-right: 12px; font-size: 1.5rem; 
+            -webkit-text-fill-color: var(--primary-orange);
+            filter: drop-shadow(0 0 5px rgba(255, 126, 95, 0.4));
+        }
+        .navbar-date { 
+            font-size: 0.8rem; color: #94a3b8; font-weight: 600; 
+            background: rgba(0,0,0,0.03); padding: 5px 15px; border-radius: 20px;
         }
 
-        .welcome-text h1 { font-size: 1.2rem; font-weight: 400; opacity: 0.9; }
+        .menu-toggle { 
+            width: 40px; height: 40px; border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            background: white; border: 1px solid #eee;
+            color: var(--primary-orange); cursor: pointer; transition: 0.3s;
+        }
+        .menu-toggle:hover { transform: rotate(90deg); background: var(--soft-orange); }
 
-        .welcome-text h2 { font-size: 1.8rem; font-weight: 700; margin: 5px 0; }
+        /* --- WELCOME BAR: TECH-CORE --- */
+        .welcome-card {
+            background: #fff;
+            border-radius: 24px; padding: 40px; 
+            display: flex; justify-content: space-between; align-items: center;
+            position: relative; overflow: hidden; 
+            box-shadow: var(--shadow-tech);
+            margin: 30px 0;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+        }
+        /* Efek Dekorasi Digital di Background */
+        .welcome-card::before {
+            content: ""; position: absolute; top: -50px; right: -50px;
+            width: 200px; height: 200px; background: var(--soft-orange);
+            border-radius: 50%; filter: blur(60px); opacity: 0.5;
+        }
+        .welcome-card::after {
+            content: "SYSTEM ONLINE"; position: absolute; bottom: 15px; right: 40px;
+            font-size: 0.6rem; font-weight: 800; color: var(--tech-blue);
+            letter-spacing: 2px; opacity: 0.6;
+        }
 
-        .profile-pic { width: 100px; height: 100px; border-radius: 50%; border: 3px solid rgba(255,255,255,0.3); object-fit: cover; z-index: 1; }
+        .welcome-text h1 { font-size: 1rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; }
+        .welcome-text h2 { 
+            font-size: 2.2rem; font-weight: 800; margin: 5px 0; 
+            color: #1e293b; line-height: 1.2;
+        }
+        .welcome-text .status-badge {
+            display: inline-flex; align-items: center;
+            padding: 6px 14px; background: #f0fdf4; border: 1px solid #bbf7d0;
+            border-radius: 30px; color: #16a34a; font-size: 0.75rem; font-weight: 700;
+        }
+        .status-badge i { margin-right: 6px; font-size: 0.5rem; }
 
+        .profile-wrapper { position: relative; }
+        .profile-pic { 
+            width: 110px; height: 110px; border-radius: 20px; 
+            border: 4px solid white; object-fit: cover; 
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            transform: rotate(3deg); transition: 0.3s;
+        }
+        .profile-wrapper:hover .profile-pic { transform: rotate(0deg) scale(1.05); }
 
-
-        /* Grid Cards (Elegant Minimalist) */
-
+        /* --- GRID & CARDS --- */
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
         .grid-menu { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
-
         .card {
-
-            background: var(--card-bg); border-radius: 16px; padding: 25px; text-align: center;
-
-            cursor: pointer; transition: all 0.3s ease; border: 1px solid rgba(0,0,0,0.03);
-
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-
+            background: white; border-radius: 20px; padding: 30px; 
+            text-align: center; cursor: pointer; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid rgba(0,0,0,0.02);
+            display: flex; flex-direction: column; align-items: center;
         }
-
-        .card:hover { transform: translateY(-5px); box-shadow: 0 12px 20px rgba(0,0,0,0.06); border-color: var(--secondary-orange); }
-
-        .card-icon { font-size: 2.2rem; color: var(--primary-orange); margin-bottom: 15px; opacity: 0.8; }
-
+        .card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.08); border-color: var(--primary-orange); }
+        .card-icon { font-size: 2.2rem; margin-bottom: 20px; background: var(--gradient-futuristic); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         
-
+        /* Pie Chart UI */
         .pie-chart {
-
-            width: 70px; height: 70px; border-radius: 50%; position: relative;
-
+            width: 80px; height: 80px; border-radius: 50%; position: relative;
             display: flex; justify-content: center; align-items: center; margin-bottom: 15px;
-
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
         }
-
         .pie-chart::after {
-
             content: attr(data-percent); position: absolute; background: white;
-
-            width: 55px; height: 55px; border-radius: 50%; display: flex;
-
-            justify-content: center; align-items: center; font-weight: 700; color: var(--primary-orange); font-size: 0.9rem;
-
+            width: 60px; height: 60px; border-radius: 50%; display: flex;
+            justify-content: center; align-items: center; font-weight: 800; color: #1e293b; font-size: 0.9rem;
         }
 
+        .card h3 { font-size: 1.1rem; font-weight: 700; color: #334155; margin-bottom: 8px; }
+        .card p { font-size: 0.85rem; color: #94a3b8; }
 
+        /* Dropdown & Modals (Keep previous logic) */
+        .dropdown-menu { display: none; position: absolute; top: 50px; right: 0; background: white; width: 220px; border-radius: 15px; box-shadow: var(--shadow-tech); border: 1px solid #f1f5f9; overflow: hidden; z-index: 2000; }
+        .dropdown-menu.active { display: block; animation: slideIn 0.3s ease; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .dropdown-menu a { display: flex; align-items: center; padding: 15px 20px; text-decoration: none; color: #64748b; font-size: 0.9rem; transition: 0.2s; }
+        .dropdown-menu a i { margin-right: 12px; color: var(--primary-orange); }
+        .dropdown-menu a:hover { background: #fff7ed; color: var(--primary-orange); }
 
-        .card h3 { font-size: 1.05rem; margin-bottom: 5px; color: #444; }
-
-        .card p { font-size: 0.85rem; color: #888; }
-
-
-
-        /* --- MODALS --- */
-
-        .modal {
-
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-
-            background: rgba(44, 62, 80, 0.4); backdrop-filter: blur(4px); z-index: 3000; justify-content: center; align-items: center;
-
-        }
-
-        .modal.show { display: flex; }
-
-
-
-        .modal-content-absensi, .modal-content-about, .modal-content-password { 
-
-            background: white; padding: 30px; border-radius: 18px; width: 90%; max-width: 450px; 
-
-            position: relative; box-shadow: 0 20px 50px rgba(0,0,0,0.15);
-
-        }
-
-
-
-        .btn-action { background: var(--modal-btn-action); color: white; border: none; padding: 12px 0; width: 100%; border-radius: 10px; font-weight: 600; cursor: pointer; transition: 0.3s; margin-top: 10px; }
-
-        .btn-action:hover { background: var(--modal-btn-hover); }
-
-
-
-        .form-input { width: 100%; padding: 12px; border: 1px solid #eee; border-radius: 8px; margin-bottom: 15px; background: #fdfdfd; }
-
-        .attendance-list li { padding: 12px; border-bottom: 1px solid #f9f9f9; display: flex; justify-content: space-between; font-size: 0.95rem; }
-
-        .tag-absent { background: #fff5f5; color: #e74c3c; padding: 3px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; }
-
-
-
-        .footer { text-align: center; margin-top: 60px; font-size: 0.75rem; color: #bdc3c7; letter-spacing: 0.5px; }
-
+        .footer { text-align: center; margin-top: 60px; font-size: 0.75rem; color: #94a3b8; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; }
     </style>
-
 </head>
-
 <body>
 
-
-
-    <div id="dashboard-container">
-
-        <nav class="navbar">
-
-            <div class="navbar-brand">
-
-                <i class="fas fa-school"></i> SMPIT Al-Kautsar
-
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <i class="fas fa-microchip"></i> SMPIT AL-KAUTSAR
+        </div>
+        <div class="navbar-date" id="currentDate">Kamis, 29 Januari 2026</div>
+        <div class="menu-container" style="position: relative;">
+            <div class="menu-toggle" onclick="toggleMenu()"><i class="fas fa-shapes"></i></div>
+            <div class="dropdown-menu" id="dropdownMenu">
+                <a href="#"><i class="fas fa-fingerprint"></i> Autentikasi</a>
+                <a href="#"><i class="fas fa-sliders-h"></i> Pengaturan</a>
+                <div style="height: 1px; background: #f1f5f9;"></div>
+                <a href="#" style="color: #ef4444;"><i class="fas fa-power-off"></i> Keluar Sistem</a>
             </div>
+        </div>
+    </nav>
 
-            <div class="navbar-date" id="currentDate">Rabu, 28 Januari 2026</div>
-
-            <div class="menu-container">
-
-                <div class="menu-toggle" onclick="toggleMenu()"><i class="fas fa-th-large"></i></div>
-
-                <div class="dropdown-menu" id="dropdownMenu">
-
-                    <a href="#"><i class="fas fa-sync-alt"></i> Refresh Data</a>
-
-                    <a href="#" onclick="openModal('modalAbout')"><i class="fas fa-info-circle"></i> Tentang</a>
-
-                    <a href="#" onclick="openModal('modalPassword')"><i class="fas fa-key"></i> Ubah Password</a>
-
-                    <div style="height: 1px; background: #eee;"></div>
-
-                    <a href="#" style="color: #e74c3c;"><i class="fas fa-sign-out-alt"></i> Logout</a>
-
-                </div>
-
+    <div class="container">
+        <div class="welcome-card">
+            <div class="welcome-text">
+                <div class="status-badge"><i class="fas fa-circle"></i> SYSTEM ACTIVE</div>
+                <h1>Terminal Dashboard Utama</h1>
+                <h2>Bpk. Kepala Sekolah, M.Pd.</h2>
+                <p style="color: #64748b; font-size: 0.95rem; font-weight: 500;">
+                    <i class="fas fa-shield-alt" style="margin-right: 5px; color: var(--tech-blue);"></i> 
+                    Level Akses: <strong>Administrator Utama</strong>
+                </p>
             </div>
-
-        </nav>
-
-
-
-        <div class="container">
-
-            <div class="welcome-card">
-
-                <div class="welcome-text">
-
-                    <h1>Selamat Datang Kembali,</h1>
-
-                    <h2>Bpk. Kepala Sekolah, M.Pd.</h2>
-
-                    <p style="opacity: 0.8; font-size: 0.9rem;">NIPY: 12345678 | Administrator Utama</p>
-
-                </div>
-
+            <div class="profile-wrapper">
                 <img src="https://i.pravatar.cc/150?img=11" alt="Profile" class="profile-pic">
-
             </div>
-
-
-
-            <div class="grid-menu">
-
-                <div class="card">
-
-                    <div class="pie-chart" style="background: conic-gradient(var(--primary-orange) 85% 0%, #f0f0f0 0% 100%);" data-percent="85%"></div>
-
-                    <h3>Jurnal Harian</h3><p>Keterisian guru hari ini</p>
-
-                </div>
-
-                <div class="card">
-
-                    <div class="pie-chart" style="background: conic-gradient(var(--secondary-orange) 92% 0%, #f0f0f0 0% 100%);" data-percent="92%"></div>
-
-                    <h3>Jurnal Bulanan</h3><p>Akumulasi Januari</p>
-
-                </div>
-
-                <div class="card" onclick="openModal('modalAbsensi')">
-
-                    <div class="card-icon"><i class="fas fa-user-clock"></i></div>
-
-                    <h3>Absensi Karyawan</h3><p style="color: #e74c3c; font-weight: 600;">3 Orang Tidak Hadir</p>
-
-                </div>
-
-                <div class="card">
-
-                    <div class="card-icon"><i class="fas fa-users-cog"></i></div>
-
-                    <h3>Daftar Pegawai</h3><p>Database Guru & Staff</p>
-
-                </div>
-
-                 <div class="card">
-
-                    <div class="card-icon"><i class="fas fa-folder-open"></i></div>
-
-                    <h3>Notulen Rapat</h3><p>Arsip Digital Sekolah</p>
-
-                </div>
-
-                <div class="card">
-
-                    <div class="card-icon"><i class="fas fa-heart"></i></div>
-
-                    <h3>Mutabaah</h3><p>Laporan Ibadah Harian</p>
-
-                </div>
-
-            </div>
-
-
-
-            <div class="footer">&copy; 2026 Tim IT SMPIT Al-Kautsar | Premium Executive Dashboard</div>
-
         </div>
 
-    </div>
-
-
-
-    <div class="modal" id="modalAbsensi">
-
-        <div class="modal-content-absensi">
-
-            <h2 style="color: var(--primary-orange); margin-bottom: 15px; font-size: 1.2rem;">Laporan Ketidakhadiran</h2>
-
-            <ul class="attendance-list">
-
-                <li><span>Ahmad Fauzi</span><span class="tag-absent">Sakit</span></li>
-
-                <li><span>Siti Aminah</span><span class="tag-absent">Izin</span></li>
-
-                <li><span>Budi Santoso</span><span class="tag-absent">Tanpa Ket.</span></li>
-
-            </ul>
-
-            <button class="btn-action" onclick="closeModal('modalAbsensi')">Tutup</button>
-
+        <div class="grid-menu">
+            <div class="card">
+                <div class="pie-chart" style="background: conic-gradient(var(--primary-orange) 85% 0%, #f1f5f9 0% 100%);" data-percent="85%"></div>
+                <h3>Jurnal Harian</h3>
+                <p>Monitoring real-time guru</p>
+            </div>
+            <div class="card">
+                <div class="pie-chart" style="background: conic-gradient(var(--tech-blue) 92% 0%, #f1f5f9 0% 100%);" data-percent="92%"></div>
+                <h3>Jurnal Bulanan</h3>
+                <p>Efektivitas Akademik Januari</p>
+            </div>
+            <div class="card">
+                <div class="card-icon"><i class="fas fa-user-astronaut"></i></div>
+                <h3>Presensi Staff</h3>
+                <p style="color: #ef4444; font-weight: 700;">3 Personel Off-Duty</p>
+            </div>
+            <div class="card">
+                <div class="card-icon"><i class="fas fa-database"></i></div>
+                <h3>Big Data Pegawai</h3>
+                <p>Direktori Guru & Karyawan</p>
+            </div>
+            <div class="card">
+                <div class="card-icon"><i class="fas fa-file-signature"></i></div>
+                <h3>E-Notulen</h3>
+                <p>Arsip Keputusan Digital</p>
+            </div>
+            <div class="card">
+                <div class="card-icon"><i class="fas fa-bolt"></i></div>
+                <h3>Mutabaah</h3>
+                <p>Indikator Spiritual Harian</p>
+            </div>
         </div>
 
+        <div class="footer">Next-Gen Education System &copy; 2026 SMPIT Al-Kautsar</div>
     </div>
+
+    <script>
+        function toggleMenu() {
+            document.getElementById('dropdownMenu').classList.toggle('active');
+        }
+        // Menutup dropdown jika klik di luar
+        window.onclick = function(event) {
+            if (!event.target.matches('.menu-toggle') && !event.target.matches('.fa-shapes')) {
+                var dropdowns = document.getElementsByClassName("dropdown-menu");
+                for (var i = 0; i < dropdowns.length; i++) {
+                    var openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('active')) {
+                        openDropdown.classList.remove('active');
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html>
 
     <script>
         function toggleMenu() {
