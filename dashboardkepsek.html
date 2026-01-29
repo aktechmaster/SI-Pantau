@@ -482,43 +482,41 @@
 
 
     <script>
-    // Kode ini mengambil username dari memori browser (yang diisi saat login)
-// Jika tidak ada (belum login), sistem bisa diarahkan kembali ke index.html
-const loggedInUsername = localStorage.getItem("username"); 
+    // Konfigurasi Awal
+    const loggedInUser = "Bpk. Kepala Sekolah, M.Pd."; 
+    const webAppUrl = "https://script.google.com/macros/s/AKfycbx4K4zFt99EquOI5tis0DrywRUrJxhAFxTHQJiwUaI0SESVKGPOW6Kwg5AzWxWKb5wt/exec";
 
-if (!loggedInUsername) {
-    window.location.href = 'index.html'; // Tendang balik ke login jika tidak ada session
-}
+    // 1. Inisialisasi Data Saat Halaman Dimuat
+    window.onload = function() {
+        // Jalankan fungsi update tanggal
+        const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        document.getElementById('currentDate').innerText = new Date().toLocaleDateString('id-ID', dateOptions);
+        
+        // Ambil data dari database Spreadsheet
+        loadUserData();
+    };
 
-async function loadUserData() {
-    try {
-        const response = await fetch(webAppUrl);
-        const data = await response.json();
-        
-        // MENCARI DATA SECARA OTOMATIS
-        // Sistem mencari di array 'users' mana yang usernamenya cocok dengan yang sedang login
-        const userAccount = data.users.find(u => u.username.toLowerCase() === loggedInUsername.toLowerCase());
-        
-        if (userAccount) {
-            // Jika ketemu, ambil Nama Lengkapnya (misal: "Hanif Fathin Siddik, S.Si")
-            const namaLengkap = userAccount.nama; 
-            
-            // Cari detail biodatanya berdasarkan Nama Lengkap tersebut
-            const biodata = data.biodata[namaLengkap];
+    // 2. Fungsi Ambil Data dari Backend (Code.gs)
+    async function loadUserData() {
+        try {
+            const response = await fetch(webAppUrl);
+            const data = await response.json();
+            const biodata = data.biodata[loggedInUser]; // Mengambil data berdasarkan nama
 
             if (biodata) {
-                // Update tampilan dashboard secara otomatis sesuai siapa yang login
-                document.getElementById('userName').innerText = namaLengkap;
+                // Update Nama (Instruksi 5)
+                document.getElementById('userName').innerText = loggedInUser;
+                // Update NIPY (Instruksi 6)
                 document.getElementById('userNIPY').innerText = "NIPY: " + (biodata.nip || "-");
+                // Update Jabatan Utama | Tugas Tambahan (Instruksi 7)
                 document.getElementById('userRole').innerText = `${biodata.jabatan} | ${biodata.tugasTambahan}`;
-                
+                // Update Foto jika tersedia
                 if(biodata.foto) document.getElementById('userPhoto').src = biodata.foto;
             }
+        } catch (error) {
+            console.error("Gagal memuat data dari Spreadsheet:", error);
         }
-    } catch (error) {
-        console.error("Gagal memuat data:", error);
     }
-}
 
     // 3. Logika Navigasi & Menu (DISETEL ULANG AGAR BERFUNGSI)
     function toggleMenu() {
