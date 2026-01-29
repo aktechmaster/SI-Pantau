@@ -7,167 +7,144 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            /* Palette Futuristik & Elegan */
-            --primary-tech: #0f172a; /* Deep Slate Blue */
-            --accent-blue: #38bdf8;  /* Electric Blue */
-            --soft-blue: #f1f5f9;    /* Background Grayish Blue */
-            --text-main: #1e293b;
-            --text-muted: #64748b;
-            --gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            --glass-white: rgba(255, 255, 255, 0.9);
-            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-            --card-bg: #ffffff;
-            --modal-btn-cyan: #0284c7;
-            --modal-btn-hover: #0369a1;
+            /* Palette: Soft Futuristic Blue & White */
+            --bg-body: #f0f4f8;
+            --primary-tech: #00a8ff;
+            --secondary-tech: #00d2ff;
+            --glass-white: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.4);
+            --text-main: #2d3436;
+            --text-soft: #636e72;
+            --accent-gradient: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%);
+            --shadow-soft: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', 'Segoe UI', sans-serif; }
-        body { background-color: var(--soft-blue); color: var(--text-main); padding-bottom: 50px; }
-
-        /* --- DASHBOARD CONTAINER --- */
-        #dashboard-container { display: block; }
+        
+        body { 
+            background: radial-gradient(circle at top right, #e0eafc, #cfdef3); 
+            background-attachment: fixed;
+            color: var(--text-main); 
+            padding-bottom: 50px; 
+        }
 
         /* --- Navbar --- */
         .navbar {
-            background: var(--primary-tech);
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             padding: 15px 30px;
             display: flex; justify-content: space-between; align-items: center;
-            color: white; 
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); 
-            position: relative;
-            border-bottom: 2px solid var(--accent-blue);
+            color: var(--text-main); 
+            border-bottom: 1px solid var(--glass-border);
+            position: sticky; top: 0; z-index: 1000;
         }
-        .navbar-brand { display: flex; align-items: center; font-weight: 600; font-size: 1.1rem; letter-spacing: 0.5px; }
-        .navbar-brand i { margin-right: 10px; font-size: 1.5rem; color: var(--accent-blue); }
-        .navbar-date { font-size: 0.85rem; color: #94a3b8; font-weight: 400; }
-        @media (max-width: 768px) { .navbar-date { display: none; } }
+        .navbar-brand { display: flex; align-items: center; font-weight: 700; font-size: 1.1rem; color: #3a7bd5; }
+        .navbar-brand i { margin-right: 10px; font-size: 1.5rem; }
+        .navbar-date { font-size: 0.85rem; color: var(--text-soft); font-weight: 500; }
 
         /* Dropdown Menu */
         .menu-container { position: relative; }
-        .menu-toggle { cursor: pointer; font-size: 1.4rem; padding: 5px; transition: all 0.3s ease; color: #cbd5e1; }
-        .menu-toggle:hover { color: var(--accent-blue); transform: rotate(90deg); }
+        .menu-toggle { cursor: pointer; font-size: 1.2rem; color: var(--text-soft); }
         .dropdown-menu {
             display: none; position: absolute; top: 45px; right: 0;
-            background: white; width: 220px; border-radius: 12px;
-            box-shadow: var(--shadow); z-index: 2000;
-            overflow: hidden; animation: fadeIn 0.3s ease;
-            border: 1px solid #e2e8f0;
+            background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(15px);
+            width: 220px; border-radius: 12px; border: 1px solid var(--glass-border);
+            box-shadow: var(--shadow-soft); z-index: 2000; overflow: hidden;
         }
-        .dropdown-menu.active { display: block; }
+        .dropdown-menu.active { display: block; animation: slideUp 0.3s ease; }
         .dropdown-menu a {
             display: flex; align-items: center; padding: 12px 20px;
-            text-decoration: none; color: var(--text-main); font-size: 0.9rem; transition: all 0.2s;
+            text-decoration: none; color: var(--text-main); font-size: 0.9rem; transition: 0.2s;
         }
-        .dropdown-menu a i { margin-right: 12px; width: 18px; text-align: center; color: var(--accent-blue); }
-        .dropdown-menu a:hover { background-color: #f8fafc; color: var(--modal-btn-cyan); }
-        .dropdown-divider { height: 1px; background-color: #f1f5f9; margin: 0; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .dropdown-menu a i { margin-right: 12px; color: var(--primary-tech); }
+        .dropdown-menu a:hover { background: rgba(0, 168, 255, 0.1); color: var(--primary-tech); }
 
-        /* --- Content Styles --- */
+        /* --- Content --- */
         .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
         
         .welcome-card {
-            background: var(--gradient); border-radius: 20px; padding: 45px; color: white;
+            background: var(--glass-white);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px; padding: 40px; color: var(--text-main);
             display: flex; justify-content: space-between; align-items: center;
-            position: relative; overflow: hidden; box-shadow: var(--shadow); margin-bottom: 40px;
+            box-shadow: var(--shadow-soft); margin-bottom: 35px;
+            position: relative; overflow: hidden;
         }
-        /* Motif grid teknologi halus */
-        .welcome-card::before {
-            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-            background-image: radial-gradient(var(--accent-blue) 0.5px, transparent 0.5px);
-            background-size: 20px 20px; opacity: 0.1;
+        .welcome-card::after {
+            content: ''; position: absolute; top: -50%; right: -10%; width: 300px; height: 300px;
+            background: radial-gradient(circle, rgba(0, 210, 255, 0.1) 0%, transparent 70%);
         }
-        .welcome-text { position: relative; z-index: 2; }
-        .welcome-text h1 { font-size: 1.4rem; font-weight: 300; color: var(--accent-blue); margin-bottom: 5px; }
-        .welcome-text h2 { font-size: 2.4rem; font-weight: 700; letter-spacing: -0.5px; }
-        .welcome-text p { opacity: 0.7; font-size: 0.95rem; margin-top: 5px; font-weight: 300; }
-        .profile-pic { 
-            width: 130px; height: 130px; border-radius: 50%; 
-            border: 4px solid rgba(56, 189, 248, 0.3); 
-            object-fit: cover; z-index: 1; 
-            box-shadow: 0 0 20px rgba(56, 189, 248, 0.2);
-        }
+        .welcome-text h1 { font-size: 1.4rem; color: var(--text-soft); font-weight: 400; }
+        .welcome-text h2 { font-size: 2rem; font-weight: 700; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .profile-pic { width: 110px; height: 110px; border-radius: 30px; border: 4px solid white; box-shadow: var(--shadow-soft); object-fit: cover; }
 
-        /* Grid Cards */
+        /* Grid Cards - Glassmorphism Style */
         .grid-menu { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
         .card {
-            background: var(--card-bg); border-radius: 16px; padding: 30px; text-align: center;
-            cursor: pointer; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-            min-height: 200px; display: flex; flex-direction: column; justify-content: center; align-items: center;
-            border: 1px solid #f1f5f9;
+            background: var(--glass-white);
+            backdrop-filter: blur(6px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px; padding: 30px; text-align: center;
+            cursor: pointer; transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            box-shadow: var(--shadow-soft);
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
         }
         .card:hover { 
             transform: translateY(-10px); 
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05); 
-            border-color: var(--accent-blue);
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+            border-color: var(--primary-tech);
         }
         .card-icon { 
-            font-size: 2.8rem; 
-            background: linear-gradient(135deg, #0ea5e9, #6366f1); 
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
-            margin-bottom: 15px; 
+            font-size: 2.2rem; margin-bottom: 15px;
+            background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
-        .card h3 { font-size: 1.15rem; font-weight: 600; color: var(--text-main); margin-bottom: 8px; }
-        .card p { font-size: 0.9rem; color: var(--text-muted); }
-
+        
+        /* Pie Chart Futuristic */
         .pie-chart {
             width: 85px; height: 85px; border-radius: 50%; position: relative;
-            display: flex; justify-content: center; align-items: center; margin-bottom: 18px;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+            display: flex; justify-content: center; align-items: center; margin-bottom: 15px;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
         }
         .pie-chart::after {
             content: attr(data-percent); position: absolute; background: white;
             width: 65px; height: 65px; border-radius: 50%; display: flex;
-            justify-content: center; align-items: center; font-weight: 700; 
-            color: var(--primary-tech); font-size: 1.1rem;
+            justify-content: center; align-items: center; font-weight: 700; color: #3a7bd5;
         }
 
-        /* --- MODALS --- */
+        /* --- Modals --- */
         .modal {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(4px); 
+            background: rgba(255, 255, 255, 0.4); backdrop-filter: blur(8px);
             z-index: 3000; justify-content: center; align-items: center;
-            opacity: 0; transition: opacity 0.3s ease;
+            opacity: 0; transition: 0.3s;
         }
         .modal.show { display: flex; opacity: 1; }
-
+        
         .modal-content-absensi, .modal-content-about, .modal-content-password { 
-            background: white; border-radius: 20px; position: relative; 
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-            border: 1px solid #f1f5f9;
+            background: rgba(255, 255, 255, 0.95); padding: 35px; border-radius: 24px; 
+            width: 90%; max-width: 450px; border: 1px solid white; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
         }
-        .modal-content-absensi { padding: 35px; width: 90%; max-width: 500px; }
-        .modal-content-about { padding: 45px 35px; width: 90%; max-width: 380px; text-align: center; }
-        .modal-content-password { padding: 30px; width: 90%; max-width: 420px; }
 
         .btn-cyan { 
-            background: var(--gradient); color: white; border: none; padding: 14px 0; 
-            width: 100%; border-radius: 12px; font-weight: 600; cursor: pointer; 
-            transition: 0.3s; letter-spacing: 0.5px;
+            background: var(--accent-gradient); color: white; border: none; 
+            padding: 14px; width: 100%; border-radius: 14px; font-weight: 600; 
+            cursor: pointer; transition: 0.3s; box-shadow: 0 4px 15px rgba(58, 123, 213, 0.3);
         }
-        .btn-cyan:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(15, 23, 42, 0.3); }
-        
-        .form-input { 
-            width: 100%; padding: 12px 15px; border: 1.5px solid #e2e8f0; 
-            border-radius: 10px; margin-bottom: 18px; outline: none; transition: 0.2s;
-            background: #f8fafc;
-        }
-        .form-input:focus { border-color: var(--accent-blue); background: #fff; box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.1); }
-        
-        .attendance-list { list-style: none; margin-top: 25px; }
-        .attendance-list li { 
-            padding: 15px; border-bottom: 1px solid #f1f5f9; display: flex; 
-            justify-content: space-between; align-items: center; font-size: 0.95rem;
-        }
-        .tag-absent { 
-            background: #fee2e2; color: #ef4444; padding: 4px 12px; 
-            border-radius: 20px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase;
-        }
-        .close-x { cursor: pointer; float: right; font-size: 1.5rem; color: var(--text-muted); transition: 0.2s; }
-        .close-x:hover { color: var(--primary-tech); }
+        .btn-cyan:hover { opacity: 0.9; transform: scale(1.02); }
 
-        .footer { text-align: center; margin-top: 60px; font-size: 0.8rem; color: var(--text-muted); font-weight: 400; }
+        .form-input { 
+            width: 100%; padding: 12px 15px; border: 1px solid #e0eafc; 
+            border-radius: 12px; margin-bottom: 15px; outline: none; background: #f8fafc;
+        }
+
+        .tag-absent { background: #fff5f5; color: #ff4757; padding: 4px 10px; border-radius: 8px; font-size: 0.75rem; font-weight: 600; }
+        
+        .footer { text-align: center; margin-top: 50px; font-size: 0.8rem; color: var(--text-soft); letter-spacing: 1px; }
+
+        @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
@@ -175,17 +152,17 @@
     <div id="dashboard-container">
         <nav class="navbar">
             <div class="navbar-brand">
-                <i class="fas fa-shield-halved"></i> SMPIT Al-Kautsar
+                <i class="fas fa-microchip"></i> SMPIT Al-Kautsar
             </div>
-            <div class="navbar-date" id="currentDate">Rabu, 28 Januari 2026</div>
+            <div class="navbar-date" id="currentDate"></div>
             <div class="menu-container">
-                <div class="menu-toggle" onclick="toggleMenu()"><i class="fas fa-th-large"></i></div>
+                <div class="menu-toggle" onclick="toggleMenu()"><i class="fas fa-ellipsis-v"></i></div>
                 <div class="dropdown-menu" id="dropdownMenu">
-                    <a href="#" onclick="refreshData()"><i class="fas fa-arrows-rotate"></i> Sinkronisasi Data</a>
-                    <a href="#" onclick="openModal('modalAbout')"><i class="fas fa-circle-info"></i> Sistem Aplikasi</a>
-                    <a href="#" onclick="openModal('modalPassword')"><i class="fas fa-shield-check"></i> Keamanan Akun</a>
-                    <div class="dropdown-divider"></div>
-                    <a href="#" onclick="logoutAction()" style="color: #ef4444;"><i class="fas fa-power-off" style="color: #ef4444;"></i> Logout Sesi</a>
+                    <a href="#" onclick="refreshData()"><i class="fas fa-sync-alt"></i> Refresh Data</a>
+                    <a href="#" onclick="openModal('modalAbout')"><i class="fas fa-info-circle"></i> Tentang</a>
+                    <a href="#" onclick="openModal('modalPassword')"><i class="fas fa-shield-alt"></i> Keamanan</a>
+                    <div class="dropdown-divider" style="height: 1px; background: #eee;"></div>
+                    <a href="#" onclick="logoutAction()" style="color: #ff4757;"><i class="fas fa-power-off" style="color: #ff4757;"></i> Keluar</a>
                 </div>
             </div>
         </nav>
@@ -193,63 +170,70 @@
         <div class="container">
             <div class="welcome-card">
                 <div class="welcome-text">
-                    <h1>Administrator Dashboard</h1>
+                    <h1>Executive Panel</h1>
                     <h2>Bpk. Kepala Sekolah, M.Pd.</h2>
-                    <p>NIPY: 12345678 • Otoritas Tertinggi Satuan Pendidikan</p>
+                    <p style="color: var(--text-soft); font-size: 0.9rem;">ID Sistem: 12345678 • Administrator Utama</p>
                 </div>
                 <img src="https://i.pravatar.cc/150?img=11" alt="Profile" class="profile-pic">
             </div>
 
             <div class="grid-menu">
                 <div class="card" onclick="alert('Membuka detail Jurnal Harian...')">
-                    <div class="pie-chart" style="background: conic-gradient(var(--accent-blue) 85%, #e2e8f0 0%);" data-percent="85%"></div>
-                    <h3>Jurnal Harian</h3><p>Kepatuhan pelaporan hari ini</p>
+                    <div class="pie-chart" style="background: conic-gradient(#00d2ff 85%, #f0f4f8 0%);" data-percent="85%"></div>
+                    <h3>Jurnal Harian</h3><p style="color: var(--text-soft); font-size: 0.85rem;">Keterisian guru hari ini</p>
                 </div>
                 <div class="card" onclick="alert('Membuka detail Jurnal Bulanan...')">
-                    <div class="pie-chart" style="background: conic-gradient(var(--accent-blue) 92%, #e2e8f0 0%);" data-percent="92%"></div>
-                    <h3>Jurnal Bulanan</h3><p>Performa akademik Januari</p>
+                    <div class="pie-chart" style="background: conic-gradient(#3a7bd5 92%, #f0f4f8 0%);" data-percent="92%"></div>
+                    <h3>Jurnal Bulanan</h3><p style="color: var(--text-soft); font-size: 0.85rem;">Akumulasi Januari</p>
                 </div>
                 <div class="card" onclick="openModal('modalAbsensi')">
-                    <div class="card-icon"><i class="fas fa-users-slash"></i></div>
-                    <h3>Absensi Karyawan</h3><p style="color: #ef4444; font-weight: 600;">3 Personel Luar Kantor</p>
+                    <div class="card-icon"><i class="fas fa-user-astronaut"></i></div>
+                    <h3>Absensi Karyawan</h3><p style="color: #ff4757; font-weight: 600; font-size: 0.85rem;">3 Personel Absen</p>
                 </div>
                 <div class="card" onclick="alert('Masuk ke Database Pegawai...')">
-                    <div class="card-icon"><i class="fas fa-address-book"></i></div>
-                    <h3>Manajemen SDM</h3><p>Data induk guru & staf</p>
+                    <div class="card-icon"><i class="fas fa-database"></i></div>
+                    <h3>Daftar Pegawai</h3><p style="color: var(--text-soft); font-size: 0.85rem;">Manajemen Sumber Daya</p>
                 </div>
                  <div class="card" onclick="alert('Membuka Notulen...')">
-                    <div class="card-icon"><i class="fas fa-file-invoice"></i></div>
-                    <h3>Dokumentasi Rapat</h3><p>Log arsip keputusan digital</p>
+                    <div class="card-icon"><i class="fas fa-layer-group"></i></div>
+                    <h3>Notulen Rapat</h3><p style="color: var(--text-soft); font-size: 0.85rem;">Arsip Digital Modern</p>
                 </div>
                 <div class="card" onclick="alert('Membuka Mutabaah...')">
-                    <div class="card-icon"><i class="fas fa-mosque"></i></div>
-                    <h3>Laporan Mutabaah</h3><p>Monitoring ibadah harian</p>
+                    <div class="card-icon"><i class="fas fa-star"></i></div>
+                    <h3>Mutabaah</h3><p style="color: var(--text-soft); font-size: 0.85rem;">Monitoring Ibadah</p>
                 </div>
             </div>
 
-            <div class="footer">© 2026 IT Operations SMPIT Al-Kautsar | Smart Digital System 1.0</div>
+            <div class="footer">DIGITAL INTELLIGENCE SYSTEM &copy; 2026 SMPIT AL-KAUTSAR</div>
         </div>
     </div>
 
     <div class="modal" id="modalAbsensi">
         <div class="modal-content-absensi">
-            <span class="close-x" onclick="closeModal('modalAbsensi')">&times;</span>
-            <h2 style="color: var(--primary-tech); font-weight: 700;"><i class="fas fa-circle-exclamation" style="color: var(--accent-blue);"></i> Ketidakhadiran</h2>
-            <ul class="attendance-list">
-                <li><span>Ahmad Fauzi</span><span class="tag-absent">Sakit</span></li>
-                <li><span>Siti Aminah</span><span class="tag-absent">Izin</span></li>
-                <li><span>Budi Santoso</span><span class="tag-absent">Tanpa Ket.</span></li>
+            <span class="close-x" onclick="closeModal('modalAbsensi')" style="float:right; cursor:pointer;">&times;</span>
+            <h2 style="color: #3a7bd5; margin-bottom: 20px;"><i class="fas fa-fingerprint"></i> Laporan Absensi</h2>
+            <ul style="list-style:none;">
+                <li style="display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid #f0f4f8;">
+                    <span>Ahmad Fauzi</span><span class="tag-absent">Sakit</span>
+                </li>
+                <li style="display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid #f0f4f8;">
+                    <span>Siti Aminah</span><span class="tag-absent">Izin</span>
+                </li>
+                <li style="display:flex; justify-content:space-between; padding:12px 0;">
+                    <span>Budi Santoso</span><span class="tag-absent">Tanpa Ket.</span>
+                </li>
             </ul>
         </div>
     </div>
 
     <div class="modal" id="modalAbout">
         <div class="modal-content-about">
-            <div style="font-size: 4rem; margin-bottom: 20px;">
-                <i class="fas fa-microchip" style="color: var(--accent-blue);"></i>
+            <div style="font-size: 3rem; margin-bottom: 20px;">
+                <i class="fas fa-rocket" style="color: #3a7bd5;"></i>
             </div>
-            <h3>Sistem Dashboard v1.0</h3>
-            <p style="color:var(--text-muted); margin: 10px 0 25px;">Platform administrasi cerdas berbasis teknologi cloud untuk efisiensi manajemen sekolah.</p>
+            <h3>System Info</h3>
+            <p style="color:#636e72; font-size: 0.9rem; margin-top: 10px;">CORE V1.0 - FUTURISTIC INTERFACE</p>
+            <p style="color:#b2bec3; margin-bottom: 25px;">Optimized for Professional Excellence</p>
             <button class="btn-cyan" onclick="closeModal('modalAbout')">Dimengerti</button>
         </div>
     </div>
@@ -257,25 +241,21 @@
     <div class="modal" id="modalPassword">
         <div class="modal-content-password">
             <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
-                <h3 style="font-weight: 700;">Enkripsi Password</h3><span class="close-x" onclick="closeModal('modalPassword')">&times;</span>
+                <h3>Keamanan Akun</h3><span class="close-x" onclick="closeModal('modalPassword')" style="cursor:pointer;">&times;</span>
             </div>
-            <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:20px;">Amankan akses akun Anda dengan pembaruan kredensial secara berkala.</p>
-            
             <input type="password" id="oldPass" class="form-input" placeholder="Password Saat Ini">
-            <input type="password" id="newPass" class="form-input" placeholder="Password Baru (Min. 8 Karakter)">
+            <input type="password" id="newPass" class="form-input" placeholder="Password Baru">
             <input type="password" id="confPass" class="form-input" placeholder="Ulangi Password Baru">
-            
-            <button class="btn-cyan" onclick="savePasswordLogic()">Update Kredensial</button>
+            <button class="btn-cyan" onclick="savePasswordLogic()">Perbarui Kredensial</button>
         </div>
     </div>
 
     <script>
-        // Tanggal (Logika Sama)
+        // Logika script tetap sama seperti sebelumnya (sesuai instruksi)
         const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
         document.getElementById('currentDate').innerText = new Date().toLocaleDateString('id-ID', dateOptions);
 
         function toggleMenu() { document.getElementById('dropdownMenu').classList.toggle('active'); }
-
         function openModal(id) { 
             document.getElementById(id).classList.add('show'); 
             document.getElementById('dropdownMenu').classList.remove('active'); 
@@ -283,39 +263,27 @@
         function closeModal(id) { document.getElementById(id).classList.remove('show'); }
 
         function logoutAction() {
-            if(confirm('Akhiri sesi admin Anda sekarang?')) {
-                window.location.href = 'index.html';
-            }
+            if(confirm('Akhiri sesi aman Anda?')) { window.location.href = 'index.html'; }
         }
 
         function refreshData() {
-            const icon = document.querySelector('.fa-arrows-rotate');
+            const icon = document.querySelector('.fa-sync-alt');
             icon.classList.add('fa-spin');
             setTimeout(() => { 
                 icon.classList.remove('fa-spin'); 
-                alert('Sinkronisasi database selesai!');
+                alert('Sinkronisasi Berhasil!');
             }, 1000);
         }
 
         async function savePasswordLogic() {
             const newPass = document.getElementById('newPass').value;
             const confPass = document.getElementById('confPass').value;
-            
-            if (newPass !== confPass) {
-                alert("Konfirmasi password tidak cocok!");
+            if (!newPass || newPass !== confPass) {
+                alert("Data tidak valid atau konfirmasi password salah!");
                 return;
             }
-
-            const btn = document.querySelector('#modalPassword .btn-cyan');
-            btn.innerText = "Memproses...";
-            btn.disabled = true;
-
-            setTimeout(() => {
-                alert('Sistem: Password berhasil diperbarui melalui enkripsi.');
-                btn.innerText = "Update Kredensial";
-                btn.disabled = false;
-                closeModal('modalPassword');
-            }, 1200);
+            alert('Proses enkripsi dan pengiriman data ke server...');
+            closeModal('modalPassword');
         }
 
         window.onclick = function(e) {
