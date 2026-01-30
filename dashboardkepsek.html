@@ -313,10 +313,20 @@
     </p>
 </div>
 
-                <div class="card" onclick="openModal('modalAbsensi')">
-                    <div class="card-icon"><i class="fas fa-user-astronaut"></i></div>
-                    <h3>Absensi Karyawan</h3><p style="color: #ff4757; font-weight: 600; font-size: 0.85rem;">3 Personel Absen</p>
-                </div>
+                <div class="card">
+    <div class="chart-container" style="display: flex; justify-content: center; align-items: center; height: 100px;">
+        <div onclick="openAbsenTodayModal()" style="cursor: pointer; text-align: center;">
+            <h1 id="absenCount" style="font-size: 4rem; margin: 0; color: #dc3545; font-weight: bold;">0</h1>
+            <span style="font-size: 0.8rem; color: #666;">Karyawan Absen</span>
+        </div>
+    </div>
+    
+    <h3>Absensi Karyawan</h3>
+    
+    <p class="detail-link" onclick="openAbsensiGeneralModal()">
+        Lihat Rincian <i class="fas fa-arrow-right"></i>
+    </p>
+</div>
 
                 <div class="card" onclick="alert('Masuk ke Database Pegawai...')">
                     <div class="card-icon"><i class="fas fa-database"></i></div>
@@ -408,6 +418,32 @@
         
         <div class="table-responsive">
             <table class="custom-table" id="tabelBulananBody">
+                </table>
+        </div>
+    </div>
+</div>
+
+    <div id="modalAbsenToday" class="modal">
+    <div class="modal-content" style="max-width: 800px; background-color: #fff !important;"> 
+        <span class="close-btn" onclick="closeModal('modalAbsenToday')">&times;</span>
+        <h3 style="border-bottom: 2px solid #dc3545; padding-bottom: 10px; color: #dc3545;">
+            <i class="fas fa-user-times"></i> Absen Hari Ini (<span id="tanggalHariIniTitle">...</span>)
+        </h3>
+        <div class="table-responsive">
+            <table class="custom-table" id="tabelAbsenTodayBody">
+                </table>
+        </div>
+    </div>
+</div>
+
+<div id="modalAbsensiGeneral" class="modal">
+    <div class="modal-content" style="max-width: 800px; background-color: #fff !important;"> 
+        <span class="close-btn" onclick="closeModal('modalAbsensiGeneral')">&times;</span>
+        <h3 style="border-bottom: 2px solid #007bff; padding-bottom: 10px;">
+            <i class="fas fa-clipboard-list"></i> Data Rekap Absensi
+        </h3>
+        <div class="table-responsive">
+            <table class="custom-table" id="tabelAbsensiGeneralBody">
                 </table>
         </div>
     </div>
