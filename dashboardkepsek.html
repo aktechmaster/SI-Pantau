@@ -642,63 +642,55 @@
         }
     }
 
-        // --- FUNGSI KLIK ANGKA (VERSI CERDAS / AUTO-DETECT) ---
+        // --- FUNGSI KLIK ANGKA (VERSI FIX DATAWEB) ---
     function openAbsenTodayModal() {
+        // Ambil data yang dikirim dari Code.gs (sumbernya dari sheet DataWeb)
         const rawData = window.dataAbsenTodayCache; 
         const tbody = document.getElementById('tabelAbsenTodayBody');
-        tbody.innerHTML = "";
+        tbody.innerHTML = ""; // Bersihkan tabel lama
         
-        // 1. Siapkan Tanggal Hari Ini
+        // 1. Buat Tanggal Hari Ini (Format: dd/mm/yyyy)
         const today = new Date();
         const d = String(today.getDate()).padStart(2, '0');
         const m = String(today.getMonth() + 1).padStart(2, '0');
         const y = today.getFullYear();
+        const todayStr = `${d}/${m}/${y}`; // Contoh: "30/01/2026"
 
-        // KITA SIAPKAN 2 KUNCI PENCARIAN:
-        const formatIndo = `${d}/${m}/${y}`;   // Contoh: "30/01/2026"
-        const formatMesin = `${y}-${m}-${d}`;  // Contoh: "2026-01-30"
+        // Tampilkan tanggal di Judul Popup
+        document.getElementById('tanggalHariIniTitle').innerText = todayStr;
 
-        // Update Judul
-        document.getElementById('tanggalHariIniTitle').innerText = formatIndo;
-
+        // 2. Cek Datanya
         if (rawData && rawData.length > 0) {
             let adaData = false;
 
+            // Loop setiap baris data
             rawData.forEach((baris) => {
-                // Ambil data tanggal dari kolom pertama
-                let tanggalDiSheet = String(baris[0]); 
-
-                // --- LOGIKA PINTAR ---
-                // Cek apakah data di sheet mengandung Format Indo ATAU Format Mesin
-                if (tanggalDiSheet.includes(formatIndo) || tanggalDiSheet.includes(formatMesin)) {
+                // baris[0] adalah Tanggal dari Sheet DataWeb (Pasti Teks "dd/mm/yyyy")
+                // Kita bandingkan langsung: Apakah baris[0] SAMA PERSIS dengan todayStr?
+                if (baris[0] === todayStr) { 
                     
                     let rowHtml = "<tr>";
-                    baris.forEach(sel => {
-                        rowHtml += `<td>${sel}</td>`;
-                    });
+                    // Kita ambil Kolom Nama(1), Jabatan(2), Ket(3)
+                    // (Index 0 tidak perlu ditampilkan karena itu tanggal)
+                    rowHtml += `<td>${baris[1]}</td>`; // Nama
+                    rowHtml += `<td>${baris[2]}</td>`; // Jabatan
+                    rowHtml += `<td>${baris[3]}</td>`; // Keterangan
+                    
                     rowHtml += "</tr>";
                     tbody.innerHTML += rowHtml;
                     adaData = true;
                 }
             });
 
-            // Jika masih tidak ketemu juga
+            // Jika setelah dicek semua baris, tidak ada yang tanggalnya sama
             if (!adaData) {
-                // Tampilkan apa yang sebenarnya dilihat oleh sistem (untuk debug)
-                let contohData = rawData[0] ? rawData[0][0] : "Kosong";
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan='4' style='text-align:center; padding: 20px;'>
-                            <b style='color:red'>Data Tidak Ditemukan!</b><br>
-                            <small>Sistem mencari: ${formatIndo} atau ${formatMesin}<br>
-                            Data di Sheet tertulis: <b>${contohData}</b></small>
-                        </td>
-                    </tr>`;
+                tbody.innerHTML = "<tr><td colspan='3' style='text-align:center; padding: 20px;'>Nihil. Semua Masuk Hari Ini!</td></tr>";
             }
             
+            // Buka Modal
             openModal('modalAbsenToday');
         } else {
-            alert("Data Absensi belum dimuat.");
+            alert("Data Absensi belum dimuat. Coba refresh halaman.");
         }
     }
 
