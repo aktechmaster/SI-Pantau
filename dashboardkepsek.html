@@ -239,169 +239,176 @@
         box-shadow: 0 5px 15px rgba(0,0,0,0.3); /* Sedikit bayangan biar timbul */
         border: 1px solid #ccc; /* Garis pinggir tipis */
         color: #000; /* Pastikan tulisan hitam */
+        padding: 20px;
+        border-radius: 12px;
+        width: 90%;
+        position: relative;
+    }
+    
+    .close-btn {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+    .close-btn:hover { color: black; }
+
+        /* --- STYLE MODERN UNTUK POPUP ABSEN (CARD STYLE) --- */
+    .absent-container {
+        display: flex;
+        flex-direction: column;
+        gap: 15px; /* Jarak antar kartu */
+        padding: 10px;
     }
 
-        /* --- STYLE MODERN UNTUK POPUP ABSEN --- */
-.absent-container {
-    display: flex;
-    flex-direction: column;
-    gap: 15px; /* Jarak antar kartu */
-    padding: 10px;
-}
+    .absent-card {
+        background: white;
+        border-radius: 16px;
+        padding: 20px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05); /* Bayangan halus */
+        border-left: 6px solid #e0e0e0; /* Garis warna default */
+        transition: transform 0.2s, box-shadow 0.2s;
+        position: relative;
+        overflow: hidden;
+    }
 
-.absent-card {
-    background: white;
-    border-radius: 16px;
-    padding: 20px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05); /* Bayangan halus */
-    border-left: 6px solid #e0e0e0; /* Garis warna default */
-    transition: transform 0.2s, box-shadow 0.2s;
-    position: relative;
-    overflow: hidden;
-}
+    .absent-card:hover {
+        transform: translateY(-3px); /* Efek melayang saat disentuh */
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    }
 
-.absent-card:hover {
-    transform: translateY(-3px); /* Efek melayang saat disentuh */
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-}
+    /* Warna khusus berdasarkan status */
+    .status-sakit { border-left-color: #ef4444; } /* Merah untuk Sakit */
+    .status-izin { border-left-color: #3b82f6; }  /* Biru untuk Izin */
+    .status-alpha { border-left-color: #f59e0b; } /* Kuning untuk Alpha */
 
-/* Warna khusus berdasarkan status */
-.status-sakit { border-left-color: #ef4444; } /* Merah untuk Sakit */
-.status-izin { border-left-color: #3b82f6; }  /* Biru untuk Izin */
-.status-alpha { border-left-color: #f59e0b; } /* Kuning untuk Alpha */
+    .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+    }
 
-.card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 8px;
-}
+    .absent-name {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #333;
+        margin: 0;
+    }
 
-.absent-name {
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: #333;
-    margin: 0;
-}
+    .status-badge {
+        font-size: 0.75rem;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
 
-.status-badge {
-    font-size: 0.75rem;
-    padding: 4px 12px;
-    border-radius: 20px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
+    /* Badge Warna */
+    .badge-sakit { background-color: #fee2e2; color: #991b1b; }
+    .badge-izin { background-color: #dbeafe; color: #1e40af; }
+    .badge-default { background-color: #f3f4f6; color: #374151; }
 
-/* Badge Warna */
-.badge-sakit { background-color: #fee2e2; color: #991b1b; }
-.badge-izin { background-color: #dbeafe; color: #1e40af; }
-.badge-default { background-color: #f3f4f6; color: #374151; }
+    .absent-note {
+        font-size: 0.9rem;
+        color: #666;
+        background-color: #f8fafc;
+        padding: 10px;
+        border-radius: 8px;
+        margin-top: 5px;
+        font-style: italic;
+        display: flex;
+        align-items: center;
+    }
 
-.absent-note {
-    font-size: 0.9rem;
-    color: #666;
-    background-color: #f8fafc;
-    padding: 10px;
-    border-radius: 8px;
-    margin-top: 5px;
-    font-style: italic;
-    display: flex;
-    align-items: center;
-}
-
-.absent-note::before {
-    content: "📝"; /* Ikon catatan */
-    margin-right: 8px;
-    font-style: normal;
-}
+    .absent-note::before {
+        content: "📝"; /* Ikon catatan */
+        margin-right: 8px;
+        font-style: normal;
+    }
 
     </style>
-
 </head>
 
 <body>
 
-
-
     <div id="dashboard-container">
 
         <nav class="navbar">
-    <div class="navbar-brand">
-        <img src="logosmpit.png" alt="Logo" style="height: 30px; margin-right: 10px;"> SMPIT Al-Kautsar
-    </div>
-    <div class="navbar-date" id="currentDate" style="font-weight: 700; color: var(--text-main);"></div>
-    <div class="menu-container">
-        <div class="menu-toggle" onclick="event.stopPropagation(); toggleMenu()">
-            <i class="fas fa-bars"></i>
-        </div>
-        <div class="dropdown-menu" id="dropdownMenu">
-            <a href="#" onclick="refreshData()"><i class="fas fa-sync-alt"></i> Refresh Data</a>
-            <a href="#" onclick="openModal('modalAbout')"><i class="fas fa-info-circle"></i> Tentang</a>
-            <a href="#" onclick="openModal('modalPassword')"><i class="fas fa-shield-alt"></i> Keamanan</a>
-            <div class="dropdown-divider" style="height: 1px; background: #eee;"></div>
-            <a href="#" onclick="logoutAction()" style="color: #ff4757;"><i class="fas fa-power-off" style="color: #ff4757;"></i> Keluar</a>
-        </div>
-    </div>
-</nav>
+            <div class="navbar-brand">
+                <img src="logosmpit.png" alt="Logo" style="height: 30px; margin-right: 10px;"> SMPIT Al-Kautsar
+            </div>
+            <div class="navbar-date" id="currentDate" style="font-weight: 700; color: var(--text-main);"></div>
+            <div class="menu-container">
+                <div class="menu-toggle" onclick="event.stopPropagation(); toggleMenu()">
+                    <i class="fas fa-bars"></i>
+                </div>
+                <div class="dropdown-menu" id="dropdownMenu">
+                    <a href="#" onclick="refreshData()"><i class="fas fa-sync-alt"></i> Refresh Data</a>
+                    <a href="#" onclick="openModal('modalAbout')"><i class="fas fa-info-circle"></i> Tentang</a>
+                    <a href="#" onclick="openModal('modalPassword')"><i class="fas fa-shield-alt"></i> Keamanan</a>
+                    <div class="dropdown-divider" style="height: 1px; background: #eee;"></div>
+                    <a href="#" onclick="logoutAction()" style="color: #ff4757;"><i class="fas fa-power-off" style="color: #ff4757;"></i> Keluar</a>
+                </div>
+            </div>
+        </nav>
 
-<div class="container">
-    <div class="welcome-card">
-        <div class="welcome-text">
-            <h1 id="welcomeGreeting">Selamat Datang,</h1>
-            <h2 id="userName">Memuat Nama...</h2>
-            <p id="userNIPY" style="color: var(--text-soft); font-size: 0.9rem; margin-top: 5px;">NIPY: -</p>
-            <p id="userRole" style="color: var(--text-soft); font-size: 0.9rem;">Jabatan | Tugas Tambahan</p>
-            <p style="color: var(--primary-tech); font-weight: 700; font-size: 0.85rem; margin-top: 10px; letter-spacing: 1px;">SI PANTAU</p>
-        </div>
-        <img id="userPhoto" 
-     src="" 
-     alt="Profile" 
-     style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 2px solid white;"
->
-    </div>
-
-
+        <div class="container">
+            <div class="welcome-card">
+                <div class="welcome-text">
+                    <h1 id="welcomeGreeting">Selamat Datang,</h1>
+                    <h2 id="userName">Memuat Nama...</h2>
+                    <p id="userNIPY" style="color: var(--text-soft); font-size: 0.9rem; margin-top: 5px;">NIPY: -</p>
+                    <p id="userRole" style="color: var(--text-soft); font-size: 0.9rem;">Jabatan | Tugas Tambahan</p>
+                    <p style="color: var(--primary-tech); font-weight: 700; font-size: 0.85rem; margin-top: 10px; letter-spacing: 1px;">SI PANTAU</p>
+                </div>
+                <img id="userPhoto" 
+                 src="" 
+                 alt="Profile" 
+                 style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 2px solid white;">
+            </div>
 
             <div class="grid-menu">
                 <div class="card">
-    <div class="chart-container">
-        <div class="circular-progress" id="jurnalChart">
-            <div class="value-container" id="jurnalPercent">0%</div>
-        </div>
-    </div>
-    <h3>Jurnal Harian</h3>
-    <p class="detail-link" onclick="openJurnalModal()">
-        Lihat Rincian <i class="fas fa-arrow-right"></i>
-    </p>
-</div>
+                    <div class="chart-container">
+                        <div class="circular-progress" id="jurnalChart">
+                            <div class="value-container" id="jurnalPercent">0%</div>
+                        </div>
+                    </div>
+                    <h3>Jurnal Harian</h3>
+                    <p class="detail-link" onclick="openJurnalModal()">
+                        Lihat Rincian <i class="fas fa-arrow-right"></i>
+                    </p>
+                </div>
                 
                 <div class="card">
-    <div class="chart-container">
-        <div class="circular-progress" id="bulananChart">
-            <div class="value-container" id="bulananPercent">0%</div>
-        </div>
-    </div>
-    <h3>Jurnal Bulanan</h3>
-    <p class="detail-link" onclick="openBulananModal()">
-        Lihat Rincian <i class="fas fa-arrow-right"></i>
-    </p>
-</div>
+                    <div class="chart-container">
+                        <div class="circular-progress" id="bulananChart">
+                            <div class="value-container" id="bulananPercent">0%</div>
+                        </div>
+                    </div>
+                    <h3>Jurnal Bulanan</h3>
+                    <p class="detail-link" onclick="openBulananModal()">
+                        Lihat Rincian <i class="fas fa-arrow-right"></i>
+                    </p>
+                </div>
 
                 <div class="card">
-    <div class="chart-container" style="display: flex; justify-content: center; align-items: center; height: 100px;">
-        <div onclick="openAbsenTodayModal()" style="cursor: pointer; text-align: center;">
-            <h1 id="absenCount" style="font-size: 4rem; margin: 0; color: #dc3545; font-weight: bold;">0</h1>
-            <span style="font-size: 0.8rem; color: #666;">Karyawan Absen</span>
-        </div>
-    </div>
-    
-    <h3>Absensi Karyawan</h3>
-    
-    <p class="detail-link" onclick="openAbsensiGeneralModal()">
-        Lihat Rincian <i class="fas fa-arrow-right"></i>
-    </p>
-</div>
+                    <div class="chart-container" style="display: flex; justify-content: center; align-items: center; height: 100px;">
+                        <div onclick="openAbsenTodayModal()" style="cursor: pointer; text-align: center;">
+                            <h1 id="absenCount" style="font-size: 4rem; margin: 0; color: #dc3545; font-weight: bold;">0</h1>
+                            <span style="font-size: 0.8rem; color: #666;">Karyawan Absen</span>
+                        </div>
+                    </div>
+                    
+                    <h3>Absensi Karyawan</h3>
+                    
+                    <p class="detail-link" onclick="openAbsensiGeneralModal()">
+                        Lihat Rincian <i class="fas fa-arrow-right"></i>
+                    </p>
+                </div>
 
                 <div class="card" onclick="alert('Masuk ke Database Pegawai...')">
                     <div class="card-icon"><i class="fas fa-database"></i></div>
@@ -424,25 +431,6 @@
     </div>
 
 
-
-    <div class="modal" id="modalAbsensi">
-        <div class="modal-content-absensi">
-            <span class="close-x" onclick="closeModal('modalAbsensi')" style="float:right; cursor:pointer;">&times;</span>
-            <h2 style="color: #3a7bd5; margin-bottom: 20px;"><i class="fas fa-fingerprint"></i> Laporan Absensi</h2>
-            <ul style="list-style:none;">
-                <li style="display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid #f0f4f8;">
-                    <span>Ahmad Fauzi</span><span class="tag-absent">Sakit</span>
-                </li>
-                <li style="display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid #f0f4f8;">
-                    <span>Siti Aminah</span><span class="tag-absent">Izin</span>
-                </li>
-                <li style="display:flex; justify-content:space-between; padding:12px 0;">
-                    <span>Budi Santoso</span><span class="tag-absent">Tanpa Ket.</span>
-                </li>
-            </ul>
-        </div>
-    </div>
-
     <div class="modal" id="modalAbout">
         <div class="modal-content-about">
             <div style="font-size: 3rem; margin-bottom: 20px;">
@@ -455,13 +443,10 @@
         </div>
     </div>
 
-
-
     <div class="modal" id="modalPassword">
         <div class="modal-content-password">
             <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
                 <h3>Keamanan Akun</h3><span class="close-x" onclick="closeModal('modalPassword')" style="cursor:pointer;">&times;</span>
-
             </div>
             <input type="password" id="oldPass" class="form-input" placeholder="Password Saat Ini">
             <input type="password" id="newPass" class="form-input" placeholder="Password Baru">
@@ -471,55 +456,56 @@
     </div>
 
     <div id="modalJurnal" class="modal">
-    <div class="modal-content" style="max-width: 800px;"> 
-        <span class="close-btn" onclick="closeModal('modalJurnal')">&times;</span>
-        <h3 style="border-bottom: 2px solid #007bff; padding-bottom: 10px;">
-            <i class="fas fa-list-alt"></i> Rincian Jurnal Harian
-        </h3>
-        
-        <div id="absentCardContainer" class="absent-container"></div>
+        <div class="modal-content" style="max-width: 800px;"> 
+            <span class="close-btn" onclick="closeModal('modalJurnal')">&times;</span>
+            <h3 style="border-bottom: 2px solid #007bff; padding-bottom: 10px;">
+                <i class="fas fa-list-alt"></i> Rincian Jurnal Harian
+            </h3>
+            <div class="table-responsive">
+                <table class="custom-table">
+                    <tbody id="tabelJurnalBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 
     <div id="modalBulanan" class="modal">
-    <div class="modal-content" style="max-width: 800px;"> 
-        <span class="close-btn" onclick="closeModal('modalBulanan')">&times;</span>
-        <h3 style="border-bottom: 2px solid #007bff; padding-bottom: 10px;">
-            <i class="fas fa-calendar-alt"></i> Rincian Jurnal Bulanan
-        </h3>
-        
-        <div class="table-responsive">
-            <table class="custom-table" id="tabelBulananBody">
+        <div class="modal-content" style="max-width: 800px;"> 
+            <span class="close-btn" onclick="closeModal('modalBulanan')">&times;</span>
+            <h3 style="border-bottom: 2px solid #007bff; padding-bottom: 10px;">
+                <i class="fas fa-calendar-alt"></i> Rincian Jurnal Bulanan
+            </h3>
+            <div class="table-responsive">
+                <table class="custom-table">
+                     <tbody id="tabelBulananBody"></tbody>
                 </table>
+            </div>
         </div>
     </div>
-</div>
 
     <div id="modalAbsenToday" class="modal">
-    <div class="modal-content" style="max-width: 800px; background-color: #fff !important;"> 
-        <span class="close-btn" onclick="closeModal('modalAbsenToday')">&times;</span>
-        <h3 style="border-bottom: 2px solid #dc3545; padding-bottom: 10px; color: #dc3545;">
-            <i class="fas fa-user-times"></i> Absen Hari Ini (<span id="tanggalHariIniTitle">...</span>)
-        </h3>
-        <div class="table-responsive">
-            <table class="custom-table" id="tabelAbsenTodayBody">
-                </table>
+        <div class="modal-content" style="max-width: 800px; background-color: #fff !important;"> 
+            <span class="close-btn" onclick="closeModal('modalAbsenToday')">&times;</span>
+            <h3 style="border-bottom: 2px solid #dc3545; padding-bottom: 10px; color: #dc3545;">
+                <i class="fas fa-user-times"></i> Absen Hari Ini (<span id="tanggalHariIniTitle">...</span>)
+            </h3>
+            <div id="absentCardContainer" class="absent-container"></div>
         </div>
     </div>
-</div>
 
-<div id="modalAbsensiGeneral" class="modal">
-    <div class="modal-content" style="max-width: 800px; background-color: #fff !important;"> 
-        <span class="close-btn" onclick="closeModal('modalAbsensiGeneral')">&times;</span>
-        <h3 style="border-bottom: 2px solid #007bff; padding-bottom: 10px;">
-            <i class="fas fa-clipboard-list"></i> Data Rekap Absensi
-        </h3>
-        <div class="table-responsive">
-            <table class="custom-table" id="tabelAbsensiGeneralBody">
+    <div id="modalAbsensiGeneral" class="modal">
+        <div class="modal-content" style="max-width: 800px; background-color: #fff !important;"> 
+            <span class="close-btn" onclick="closeModal('modalAbsensiGeneral')">&times;</span>
+            <h3 style="border-bottom: 2px solid #007bff; padding-bottom: 10px;">
+                <i class="fas fa-clipboard-list"></i> Data Rekap Absensi
+            </h3>
+            <div class="table-responsive">
+                <table class="custom-table">
+                     <tbody id="tabelAbsensiGeneralBody"></tbody>
                 </table>
+            </div>
         </div>
     </div>
-</div>
-
-
 
     <script>
     // --- KONFIGURASI BARU ---
@@ -602,7 +588,6 @@
             // --- BAGIAN 4: ABSENSI KARYAWAN (BARU) ---
             if (data.absensi) {
                 // 1. Update Angka Besar (Jumlah Absen Hari Ini)
-                // Diambil dari Sheet "Absent Today" F2
                 document.getElementById('absenCount').innerText = data.absensi.jumlahHariIni;
                 
                 // 2. Simpan Data ke Cache Global
@@ -655,48 +640,48 @@
         });
     }
 
-    // --- FUNGSI BARU: BUKA MODAL JURNAL ---
+    // --- FUNGSI BUKA MODAL JURNAL (PAKAI TABEL) ---
     function openJurnalModal() {
-        const tabelData = window.dataJurnalCache; // Ambil data yang disimpan
+        const tabelData = window.dataJurnalCache;
         const tbody = document.getElementById('tabelJurnalBody');
-        tbody.innerHTML = ""; // Bersihkan isi lama
+        
+        // Safety check: jika tbody tidak ditemukan (karena salah ID di HTML), stop
+        if (!tbody) { console.error("Element tabelJurnalBody tidak ditemukan!"); return; }
+        
+        tbody.innerHTML = ""; 
 
         if (tabelData && tabelData.length > 0) {
-            // Loop data dari Spreadsheet untuk membuat baris tabel
             tabelData.forEach((baris, index) => {
                 let rowHtml = "<tr>";
-                
                 baris.forEach(sel => {
-                    // Baris pertama (index 0) jadi Header Tebal (TH)
                     if (index === 0) {
                         rowHtml += `<th><b>${sel}</b></th>`;
                     } else {
                         rowHtml += `<td>${sel}</td>`;
                     }
                 });
-                
                 rowHtml += "</tr>";
                 tbody.innerHTML += rowHtml;
             });
-            
-            // Tampilkan Modal
             openModal('modalJurnal'); 
         } else {
             alert("Data Jurnal sedang dimuat atau kosong. Tunggu sebentar...");
         }
     }    
 
-        // --- FUNGSI BARU: BUKA MODAL JURNAL BULANAN ---
+    // --- FUNGSI BUKA MODAL JURNAL BULANAN (PAKAI TABEL) ---
     function openBulananModal() {
-        const tabelData = window.dataBulananCache; // Ambil data bulanan
+        const tabelData = window.dataBulananCache;
         const tbody = document.getElementById('tabelBulananBody');
-        tbody.innerHTML = ""; // Bersihkan tabel lama
+        
+        if (!tbody) { console.error("Element tabelBulananBody tidak ditemukan!"); return; }
+
+        tbody.innerHTML = ""; 
 
         if (tabelData && tabelData.length > 0) {
             tabelData.forEach((baris, index) => {
                 let rowHtml = "<tr>";
                 baris.forEach(sel => {
-                    // Baris pertama jadi Header Tebal
                     if (index === 0) {
                         rowHtml += `<th><b>${sel}</b></th>`;
                     } else {
@@ -712,11 +697,14 @@
         }
     }
 
-        // --- FUNGSI KLIK ANGKA (VERSI FUTURISTIK & MODERN) ---
+    // --- FUNGSI KLIK ANGKA (VERSI FUTURISTIK & MODERN - PAKAI KARTU) ---
     function openAbsenTodayModal() {
         const dataList = window.dataAbsenTodayCache; 
-        const container = document.getElementById('absentCardContainer'); // Wadah baru
-        container.innerHTML = ""; // Bersihkan isi lama
+        const container = document.getElementById('absentCardContainer'); // Wadah KARTU
+        
+        if (!container) { console.error("Element absentCardContainer tidak ditemukan!"); return; }
+        
+        container.innerHTML = ""; 
         
         // Judul Tanggal
         const today = new Date();
@@ -725,25 +713,23 @@
 
         if (dataList && dataList.length > 0) {
             dataList.forEach((baris) => {
-                // Ambil data
                 const nama = baris[0];
-                const statusRaw = baris[1] || "Tanpa Ket"; // Misal: "Sakit", "Izin"
+                const statusRaw = baris[1] || "Tanpa Ket"; 
                 const catatan = baris[2] || "-";
 
                 // Logika Warna Otomatis
                 let borderClass = "status-alpha";
                 let badgeClass = "badge-default";
                 
-                // Cek isi teks status (case insensitive)
                 if (statusRaw.toLowerCase().includes("sakit")) {
-                    borderClass = "status-sakit"; // Garis Merah
-                    badgeClass = "badge-sakit";   // Badge Merah Muda
+                    borderClass = "status-sakit"; 
+                    badgeClass = "badge-sakit";   
                 } else if (statusRaw.toLowerCase().includes("izin")) {
-                    borderClass = "status-izin";  // Garis Biru
-                    badgeClass = "badge-izin";    // Badge Biru Muda
+                    borderClass = "status-izin";  
+                    badgeClass = "badge-izin";    
                 }
 
-                // Desain Kartu HTML (Card)
+                // Desain Kartu HTML
                 const cardHtml = `
                     <div class="absent-card ${borderClass}">
                         <div class="card-header">
@@ -759,7 +745,6 @@
                 container.innerHTML += cardHtml;
             });
         } else {
-            // Tampilan Jika Kosong (Futuristik juga)
             container.innerHTML = `
                 <div style="text-align:center; padding: 40px; color:#aaa;">
                     <div style="font-size: 3rem;">✨</div>
@@ -772,17 +757,19 @@
         openModal('modalAbsenToday');
     }
 
-    // --- B. FUNGSI KLIK RINCIAN (REKAP UMUM A1:E27) ---
+    // --- FUNGSI KLIK RINCIAN (REKAP UMUM - PAKAI TABEL) ---
     function openAbsensiGeneralModal() {
-        const data = window.dataAbsensiGeneralCache; // Data dari Sheet "Absensi"
+        const data = window.dataAbsensiGeneralCache; 
         const tbody = document.getElementById('tabelAbsensiGeneralBody');
+        
+        if (!tbody) { console.error("Element tabelAbsensiGeneralBody tidak ditemukan!"); return; }
+        
         tbody.innerHTML = "";
 
         if (data && data.length > 0) {
             data.forEach((baris, index) => {
                 let rowHtml = "<tr>";
                 baris.forEach(sel => {
-                    // Baris pertama jadi Header
                     if (index === 0) rowHtml += `<th><b>${sel}</b></th>`;
                     else rowHtml += `<td>${sel}</td>`;
                 });
@@ -795,8 +782,7 @@
         }
     }
         
-</script>
+    </script>
 
 </body>
-
 </html>
