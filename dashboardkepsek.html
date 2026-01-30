@@ -215,10 +215,18 @@
 
 
             <div class="grid-menu">
-                <div class="card" onclick="alert('Membuka detail Jurnal Harian...')">
-                    <div class="pie-chart" style="background: conic-gradient(#00d2ff 85%, #f0f4f8 0%);" data-percent="85%"></div>
-                    <h3>Jurnal Harian</h3><p style="color: var(--text-soft); font-size: 0.85rem;">Keterisian guru hari ini</p>
-                </div>
+                <div class="card">
+    <div class="chart-container">
+        <div class="circular-progress" id="jurnalChart">
+            <div class="value-container" id="jurnalPercent">0%</div>
+        </div>
+    </div>
+    <h3>Jurnal Harian</h3>
+    <p class="detail-link" onclick="openJurnalModal()">
+        Lihat Rincian <i class="fas fa-arrow-right"></i>
+    </p>
+</div>
+                
                 <div class="card" onclick="alert('Membuka detail Jurnal Bulanan...')">
                     <div class="pie-chart" style="background: conic-gradient(#3a7bd5 92%, #f0f4f8 0%);" data-percent="92%"></div>
                     <h3>Jurnal Bulanan</h3><p style="color: var(--text-soft); font-size: 0.85rem;">Akumulasi Januari</p>
@@ -295,6 +303,20 @@
             <button class="btn-cyan" onclick="savePasswordLogic()">Perbarui Kredensial</button>
         </div>
     </div>
+
+    <div id="modalJurnal" class="modal">
+    <div class="modal-content" style="max-width: 800px;"> 
+        <span class="close-btn" onclick="closeModal('modalJurnal')">&times;</span>
+        <h3 style="border-bottom: 2px solid #007bff; padding-bottom: 10px;">
+            <i class="fas fa-list-alt"></i> Rincian Jurnal Harian
+        </h3>
+        
+        <div class="table-responsive">
+            <table class="custom-table" id="tabelJurnalBody">
+                </table>
+        </div>
+    </div>
+</div>
 
 
 
