@@ -167,6 +167,72 @@
 
         @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
+        /* --- CSS BARU UNTUK DIAGRAM JURNAL --- */
+    .circular-progress {
+        position: relative;
+        height: 100px;
+        width: 100px;
+        border-radius: 50%;
+        background: conic-gradient(#007bff 0deg, #e0e0e0 0deg); /* Warna awal */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 15px;
+        transition: background 1s ease-in-out; /* Animasi halus */
+    }
+    
+    /* Membuat lubang tengah agar jadi cincin */
+    .circular-progress::before {
+        content: "";
+        position: absolute;
+        height: 80px;
+        width: 80px;
+        border-radius: 50%;
+        background-color: #fff;
+    }
+    
+    .value-container {
+        position: relative;
+        font-size: 20px;
+        font-weight: bold;
+        color: #007bff;
+        z-index: 1; /* Supaya teks di atas background */
+    }
+
+    .detail-link {
+        color: #007bff;
+        cursor: pointer;
+        font-size: 0.9em;
+        margin-top: 5px;
+        transition: 0.3s;
+    }
+    .detail-link:hover { 
+        text-decoration: underline; 
+        color: #0056b3; 
+    }
+
+    /* --- CSS UNTUK TABEL POPUP --- */
+    .table-responsive {
+        overflow-x: auto;
+        max-height: 400px; /* Scroll jika data panjang */
+    }
+    .custom-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.85em;
+    }
+    .custom-table th, .custom-table td {
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+        text-align: left;
+    }
+    .custom-table th {
+        background-color: #f8f9fa;
+        position: sticky; /* Header tetap di atas saat scroll */
+        top: 0;
+        z-index: 2;
+    }
+
     </style>
 
 </head>
@@ -362,14 +428,14 @@
                 return;
             }
             
+            // --- BAGIAN 1: PROFIL USER & FOTO ---
             const bio = data.biodata[loggedInUser]; 
 
             if (bio) {
-               
                 document.getElementById('userNIPY').innerText = "NIPY: " + (bio.nip || "-");
                 document.getElementById('userRole').innerText = `${userRole} | ${bio.tugasTambahan || "-"}`;
                 
-                // LOGIKA FOTO SEDERHANA
+                // LOGIKA FOTO
                 const imgElement = document.getElementById('userPhoto');
                 if(bio.foto && bio.foto.length > 10) {
                     imgElement.src = bio.foto;
@@ -377,6 +443,28 @@
                     imgElement.src = "https://via.placeholder.com/150?text=No+Img";
                 }
             }
+
+            // --- BAGIAN 2: JURNAL HARIAN (INI KODE BARUNYA) ---
+            // Disisipkan tepat setelah kurung tutup milik 'if (bio)'
+            if (data.jurnal) {
+                // 1. Update Angka Persen Teks
+                const strPersen = data.jurnal.persentase; 
+                document.getElementById('jurnalPercent').innerText = strPersen;
+
+                // 2. Update Grafik Lingkaran (Warna Biru Berputar)
+                // Ubah teks "85%" jadi angka 85
+                let angka = parseFloat(strPersen.replace('%', '').replace(',', '.')); 
+                if (isNaN(angka)) angka = 0;
+                
+                // Rumus: 100% = 360 derajat
+                const derajat = angka * 3.6;
+                document.getElementById('jurnalChart').style.background = 
+                    `conic-gradient(#007bff ${derajat}deg, #e0e0e0 0deg)`;
+
+                // 3. Simpan Data Tabel ke Memori (Agar bisa dibuka tombol)
+                window.dataJurnalCache = data.jurnal.tabel;
+            }
+
         } catch (error) {
             console.error("Gagal koneksi:", error);
             alert("Gagal memuat data: " + error);
@@ -420,71 +508,36 @@
         });
     }
 
-        /* --- CSS BARU UNTUK DIAGRAM JURNAL --- */
-    .circular-progress {
-        position: relative;
-        height: 100px;
-        width: 100px;
-        border-radius: 50%;
-        background: conic-gradient(#007bff 0deg, #e0e0e0 0deg); /* Warna awal */
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto 15px;
-        transition: background 1s ease-in-out; /* Animasi halus */
-    }
-    
-    /* Membuat lubang tengah agar jadi cincin */
-    .circular-progress::before {
-        content: "";
-        position: absolute;
-        height: 80px;
-        width: 80px;
-        border-radius: 50%;
-        background-color: #fff;
-    }
-    
-    .value-container {
-        position: relative;
-        font-size: 20px;
-        font-weight: bold;
-        color: #007bff;
-        z-index: 1; /* Supaya teks di atas background */
-    }
+    // --- FUNGSI BARU: BUKA MODAL JURNAL ---
+    function openJurnalModal() {
+        const tabelData = window.dataJurnalCache; // Ambil data yang disimpan
+        const tbody = document.getElementById('tabelJurnalBody');
+        tbody.innerHTML = ""; // Bersihkan isi lama
 
-    .detail-link {
-        color: #007bff;
-        cursor: pointer;
-        font-size: 0.9em;
-        margin-top: 5px;
-        transition: 0.3s;
-    }
-    .detail-link:hover { 
-        text-decoration: underline; 
-        color: #0056b3; 
-    }
-
-    /* --- CSS UNTUK TABEL POPUP --- */
-    .table-responsive {
-        overflow-x: auto;
-        max-height: 400px; /* Scroll jika data panjang */
-    }
-    .custom-table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 0.85em;
-    }
-    .custom-table th, .custom-table td {
-        padding: 10px;
-        border-bottom: 1px solid #ddd;
-        text-align: left;
-    }
-    .custom-table th {
-        background-color: #f8f9fa;
-        position: sticky; /* Header tetap di atas saat scroll */
-        top: 0;
-        z-index: 2;
-    }
+        if (tabelData && tabelData.length > 0) {
+            // Loop data dari Spreadsheet untuk membuat baris tabel
+            tabelData.forEach((baris, index) => {
+                let rowHtml = "<tr>";
+                
+                baris.forEach(sel => {
+                    // Baris pertama (index 0) jadi Header Tebal (TH)
+                    if (index === 0) {
+                        rowHtml += `<th><b>${sel}</b></th>`;
+                    } else {
+                        rowHtml += `<td>${sel}</td>`;
+                    }
+                });
+                
+                rowHtml += "</tr>";
+                tbody.innerHTML += rowHtml;
+            });
+            
+            // Tampilkan Modal
+            openModal('modalJurnal'); 
+        } else {
+            alert("Data Jurnal sedang dimuat atau kosong. Tunggu sebentar...");
+        }
+    }    
         
 </script>
 
