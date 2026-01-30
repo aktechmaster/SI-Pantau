@@ -642,56 +642,37 @@
         }
     }
 
-        // --- FUNGSI KLIK ANGKA (VERSI FIX DATAWEB) ---
+        // --- FUNGSI KLIK ANGKA (VERSI FINAL - TERIMA BERES) ---
     function openAbsenTodayModal() {
-        // Ambil data yang dikirim dari Code.gs (sumbernya dari sheet DataWeb)
-        const rawData = window.dataAbsenTodayCache; 
+        const dataList = window.dataAbsenTodayCache; // Ini data dari kolom H Spreadsheet
         const tbody = document.getElementById('tabelAbsenTodayBody');
-        tbody.innerHTML = ""; // Bersihkan tabel lama
+        tbody.innerHTML = ""; 
         
-        // 1. Buat Tanggal Hari Ini (Format: dd/mm/yyyy)
+        // Judul Tanggal
         const today = new Date();
-        const d = String(today.getDate()).padStart(2, '0');
-        const m = String(today.getMonth() + 1).padStart(2, '0');
-        const y = today.getFullYear();
-        const todayStr = `${d}/${m}/${y}`; // Contoh: "30/01/2026"
+        const dateStr = today.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+        document.getElementById('tanggalHariIniTitle').innerText = dateStr;
 
-        // Tampilkan tanggal di Judul Popup
-        document.getElementById('tanggalHariIniTitle').innerText = todayStr;
-
-        // 2. Cek Datanya
-        if (rawData && rawData.length > 0) {
-            let adaData = false;
-
-            // Loop setiap baris data
-            rawData.forEach((baris) => {
-                // baris[0] adalah Tanggal dari Sheet DataWeb (Pasti Teks "dd/mm/yyyy")
-                // Kita bandingkan langsung: Apakah baris[0] SAMA PERSIS dengan todayStr?
-                if (baris[0] === todayStr) { 
-                    
-                    let rowHtml = "<tr>";
-                    // Kita ambil Kolom Nama(1), Jabatan(2), Ket(3)
-                    // (Index 0 tidak perlu ditampilkan karena itu tanggal)
-                    rowHtml += `<td>${baris[1]}</td>`; // Nama
-                    rowHtml += `<td>${baris[2]}</td>`; // Jabatan
-                    rowHtml += `<td>${baris[3]}</td>`; // Keterangan
-                    
-                    rowHtml += "</tr>";
-                    tbody.innerHTML += rowHtml;
-                    adaData = true;
-                }
+        // TAMPILKAN DATA
+        if (dataList && dataList.length > 0) {
+            dataList.forEach((baris) => {
+                // baris[0] adalah Nama (dari Kolom H)
+                // baris[1] adalah Jabatan/Keterangan (dari Kolom I)
+                // baris[2] adalah Catatan (dari Kolom J)
+                
+                let rowHtml = "<tr>";
+                rowHtml += `<td><strong>${baris[0]}</strong></td>`; 
+                rowHtml += `<td>${baris[1]}</td>`; 
+                rowHtml += `<td>${baris[2]}</td>`; 
+                rowHtml += "</tr>";
+                tbody.innerHTML += rowHtml;
             });
-
-            // Jika setelah dicek semua baris, tidak ada yang tanggalnya sama
-            if (!adaData) {
-                tbody.innerHTML = "<tr><td colspan='3' style='text-align:center; padding: 20px;'>Nihil. Semua Masuk Hari Ini!</td></tr>";
-            }
-            
-            // Buka Modal
-            openModal('modalAbsenToday');
         } else {
-            alert("Data Absensi belum dimuat. Coba refresh halaman.");
+            // Kalau Spreadsheet mengirim list kosong/nihil
+            tbody.innerHTML = "<tr><td colspan='3' style='text-align:center; padding: 20px;'>Nihil. Semua Masuk!</td></tr>";
         }
+        
+        openModal('modalAbsenToday');
     }
 
     // --- B. FUNGSI KLIK RINCIAN (REKAP UMUM A1:E27) ---
