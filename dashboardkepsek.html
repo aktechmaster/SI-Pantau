@@ -480,7 +480,7 @@
         loadUserData();
     };
 
-    // 3. Ambil Data Detail (NIP, Foto, Jurnal Harian & Bulanan)
+    // 3. AMBIL DATA LENGKAP (User, Jurnal, Absensi)
     async function loadUserData() {
         try {
             console.log("Memulai fetch data..."); 
@@ -493,53 +493,51 @@
                 return;
             }
             
-            // --- BAGIAN 1: PROFIL USER & FOTO ---
+            // --- BAGIAN 1: PROFIL ---
             const bio = data.biodata[loggedInUser]; 
             if (bio) {
                 document.getElementById('userNIPY').innerText = "NIPY: " + (bio.nip || "-");
                 document.getElementById('userRole').innerText = `${userRole} | ${bio.tugasTambahan || "-"}`;
-                
-                // Logika Foto
                 const imgElement = document.getElementById('userPhoto');
-                if(bio.foto && bio.foto.length > 10) {
-                    imgElement.src = bio.foto;
-                } else {
-                    imgElement.src = "https://via.placeholder.com/150?text=No+Img";
-                }
+                if(bio.foto && bio.foto.length > 10) imgElement.src = bio.foto;
+                else imgElement.src = "https://via.placeholder.com/150?text=No+Img";
             }
 
             // --- BAGIAN 2: JURNAL HARIAN ---
             if (data.jurnal) {
                 const strPersen = data.jurnal.persentase; 
                 document.getElementById('jurnalPercent').innerText = strPersen;
-
+                
                 let angka = parseFloat(strPersen.replace('%', '').replace(',', '.')); 
                 if (isNaN(angka)) angka = 0;
-                
-                const derajat = angka * 3.6;
                 document.getElementById('jurnalChart').style.background = 
-                    `conic-gradient(#007bff ${derajat}deg, #e0e0e0 0deg)`;
-
+                    `conic-gradient(#007bff ${angka * 3.6}deg, #e0e0e0 0deg)`;
+                
                 window.dataJurnalCache = data.jurnal.tabel;
             }
 
-            // --- BAGIAN 3: JURNAL BULANAN (BARU) ---
+            // --- BAGIAN 3: JURNAL BULANAN ---
             if (data.jurnalBulanan) {
-                // 1. Update Teks Persen Bulanan
                 const strPersenBl = data.jurnalBulanan.persentase; 
                 document.getElementById('bulananPercent').innerText = strPersenBl;
-
-                // 2. Update Grafik Lingkaran Bulanan
+                
                 let angkaBl = parseFloat(strPersenBl.replace('%', '').replace(',', '.')); 
                 if (isNaN(angkaBl)) angkaBl = 0;
-                
-                const derajatBl = angkaBl * 3.6;
-                // Gunakan ID 'bulananChart'
                 document.getElementById('bulananChart').style.background = 
-                    `conic-gradient(#007bff ${derajatBl}deg, #e0e0e0 0deg)`;
-
-                // 3. Simpan Data Tabel Bulanan
+                    `conic-gradient(#007bff ${angkaBl * 3.6}deg, #e0e0e0 0deg)`;
+                
                 window.dataBulananCache = data.jurnalBulanan.tabel;
+            }
+
+            // --- BAGIAN 4: ABSENSI KARYAWAN (BARU) ---
+            if (data.absensi) {
+                // 1. Update Angka Besar (Jumlah Absen Hari Ini)
+                // Diambil dari Sheet "Absent Today" F2
+                document.getElementById('absenCount').innerText = data.absensi.jumlahHariIni;
+                
+                // 2. Simpan Data ke Cache Global
+                window.dataAbsenTodayCache = data.absensi.listHariIni; // Data Mentah B:E
+                window.dataAbsensiGeneralCache = data.absensi.listGeneral; // Data Rekap A:E
             }
 
         } catch (error) {
@@ -641,6 +639,76 @@
             openModal('modalBulanan'); 
         } else {
             alert("Data Jurnal Bulanan belum muncul. Tunggu loading...");
+        }
+    }
+
+        // --- A. FUNGSI KLIK ANGKA (ABSEN HARI INI DENGAN FILTER) ---
+    function openAbsenTodayModal() {
+        const rawData = window.dataAbsenTodayCache; // Data dari Sheet "Absent Today" (B:E)
+        const tbody = document.getElementById('tabelAbsenTodayBody');
+        tbody.innerHTML = "";
+        
+        // 1. Buat Format Tanggal Hari Ini (DD/MM/YYYY)
+        // Ini supaya cocok dengan format tanggal di Google Sheet Indonesia
+        const today = new Date();
+        const d = String(today.getDate()).padStart(2, '0');
+        const m = String(today.getMonth() + 1).padStart(2, '0');
+        const y = today.getFullYear();
+        const todayStr = `${d}/${m}/${y}`; // Contoh hasil: "30/01/2026"
+
+        // Tampilkan tanggal di Judul Modal
+        document.getElementById('tanggalHariIniTitle').innerText = todayStr;
+
+        if (rawData && rawData.length > 0) {
+            let adaData = false;
+
+            rawData.forEach((baris) => {
+                // LOGIKA FILTER PENTING:
+                // Kita cek Kolom Pertama (Kolom B di Sheet) apakah isinya SAMA dengan Tanggal Hari Ini?
+                // Kita pakai includes() biar aman kalau ada jam-nya.
+                if (baris[0] && baris[0].includes(todayStr)) {
+                    let rowHtml = "<tr>";
+                    // Loop sel (Kolom B, C, D, E)
+                    baris.forEach(sel => {
+                        rowHtml += `<td>${sel}</td>`;
+                    });
+                    rowHtml += "</tr>";
+                    tbody.innerHTML += rowHtml;
+                    adaData = true;
+                }
+            });
+
+            // Kalau tidak ada yang cocok tanggalnya
+            if (!adaData) {
+                tbody.innerHTML = "<tr><td colspan='4' style='text-align:center; padding: 20px;'>Nihil. Semua Masuk Hari Ini!</td></tr>";
+            }
+            
+            openModal('modalAbsenToday');
+        } else {
+            alert("Data Absensi belum dimuat atau kosong.");
+        }
+    }
+
+    // --- B. FUNGSI KLIK RINCIAN (REKAP UMUM A1:E27) ---
+    function openAbsensiGeneralModal() {
+        const data = window.dataAbsensiGeneralCache; // Data dari Sheet "Absensi"
+        const tbody = document.getElementById('tabelAbsensiGeneralBody');
+        tbody.innerHTML = "";
+
+        if (data && data.length > 0) {
+            data.forEach((baris, index) => {
+                let rowHtml = "<tr>";
+                baris.forEach(sel => {
+                    // Baris pertama jadi Header
+                    if (index === 0) rowHtml += `<th><b>${sel}</b></th>`;
+                    else rowHtml += `<td>${sel}</td>`;
+                });
+                rowHtml += "</tr>";
+                tbody.innerHTML += rowHtml;
+            });
+            openModal('modalAbsensiGeneral');
+        } else {
+            alert("Data Rekap belum dimuat.");
         }
     }
         
