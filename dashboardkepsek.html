@@ -642,33 +642,39 @@
         }
     }
 
-        // --- A. FUNGSI KLIK ANGKA (ABSEN HARI INI DENGAN FILTER) ---
+        // --- FUNGSI KLIK ANGKA (MODE DETEKTIF / DEBUG) ---
     function openAbsenTodayModal() {
-        const rawData = window.dataAbsenTodayCache; // Data dari Sheet "Absent Today" (B:E)
+        const rawData = window.dataAbsenTodayCache; 
         const tbody = document.getElementById('tabelAbsenTodayBody');
         tbody.innerHTML = "";
         
-        // 1. Buat Format Tanggal Hari Ini (DD/MM/YYYY)
-        // Ini supaya cocok dengan format tanggal di Google Sheet Indonesia
+        // Format Tanggal Hari Ini versi Komputer (DD/MM/YYYY)
         const today = new Date();
         const d = String(today.getDate()).padStart(2, '0');
         const m = String(today.getMonth() + 1).padStart(2, '0');
         const y = today.getFullYear();
-        const todayStr = `${d}/${m}/${y}`; // Contoh hasil: "30/01/2026"
+        const todayStr = `${d}/${m}/${y}`; // Target: "30/01/2026"
 
-        // Tampilkan tanggal di Judul Modal
+        // Tampilkan tanggal di Judul
         document.getElementById('tanggalHariIniTitle').innerText = todayStr;
 
         if (rawData && rawData.length > 0) {
             let adaData = false;
+            
+            // --- DETEKTIF GEMINI MULAI ---
+            // Kita intip data baris pertama untuk melihat format tanggalnya
+            // Nanti akan muncul Pop Up Alert memberitahu formatnya
+            if (rawData[0]) {
+               // Hapus baris alert ini jika nanti sudah berhasil
+               // alert("DEBUG: Sistem mencari '" + todayStr + "'\nTapi data di Sheet baris pertama tertulis: '" + rawData[0][0] + "'");
+            }
+            // --- DETEKTIF SELESAI ---
 
             rawData.forEach((baris) => {
-                // LOGIKA FILTER PENTING:
-                // Kita cek Kolom Pertama (Kolom B di Sheet) apakah isinya SAMA dengan Tanggal Hari Ini?
-                // Kita pakai includes() biar aman kalau ada jam-nya.
-                if (baris[0] && baris[0].includes(todayStr)) {
+                // Cek apakah data Tanggal (baris[0]) mengandung teks Hari Ini
+                // Kita gunakan String() untuk memastikan dia dianggap teks
+                if (baris[0] && String(baris[0]).includes(todayStr)) {
                     let rowHtml = "<tr>";
-                    // Loop sel (Kolom B, C, D, E)
                     baris.forEach(sel => {
                         rowHtml += `<td>${sel}</td>`;
                     });
@@ -678,9 +684,9 @@
                 }
             });
 
-            // Kalau tidak ada yang cocok tanggalnya
             if (!adaData) {
-                tbody.innerHTML = "<tr><td colspan='4' style='text-align:center; padding: 20px;'>Nihil. Semua Masuk Hari Ini!</td></tr>";
+                // Pesan kalau tidak ada yang cocok
+                tbody.innerHTML = "<tr><td colspan='4' style='text-align:center; padding: 20px; color: red;'>Format Tanggal Tidak Cocok!<br>Sistem cari: " + todayStr + "</td></tr>";
             }
             
             openModal('modalAbsenToday');
