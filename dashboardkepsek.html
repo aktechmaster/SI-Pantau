@@ -419,6 +419,73 @@
             }, 800);
         });
     }
+
+        /* --- CSS BARU UNTUK DIAGRAM JURNAL --- */
+    .circular-progress {
+        position: relative;
+        height: 100px;
+        width: 100px;
+        border-radius: 50%;
+        background: conic-gradient(#007bff 0deg, #e0e0e0 0deg); /* Warna awal */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 15px;
+        transition: background 1s ease-in-out; /* Animasi halus */
+    }
+    
+    /* Membuat lubang tengah agar jadi cincin */
+    .circular-progress::before {
+        content: "";
+        position: absolute;
+        height: 80px;
+        width: 80px;
+        border-radius: 50%;
+        background-color: #fff;
+    }
+    
+    .value-container {
+        position: relative;
+        font-size: 20px;
+        font-weight: bold;
+        color: #007bff;
+        z-index: 1; /* Supaya teks di atas background */
+    }
+
+    .detail-link {
+        color: #007bff;
+        cursor: pointer;
+        font-size: 0.9em;
+        margin-top: 5px;
+        transition: 0.3s;
+    }
+    .detail-link:hover { 
+        text-decoration: underline; 
+        color: #0056b3; 
+    }
+
+    /* --- CSS UNTUK TABEL POPUP --- */
+    .table-responsive {
+        overflow-x: auto;
+        max-height: 400px; /* Scroll jika data panjang */
+    }
+    .custom-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.85em;
+    }
+    .custom-table th, .custom-table td {
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+        text-align: left;
+    }
+    .custom-table th {
+        background-color: #f8f9fa;
+        position: sticky; /* Header tetap di atas saat scroll */
+        top: 0;
+        z-index: 2;
+    }
+        
 </script>
 
 </body>
