@@ -241,81 +241,6 @@
         color: #000; /* Pastikan tulisan hitam */
     }
 
-        /* --- STYLE MODERN UNTUK POPUP ABSEN --- */
-.absent-container {
-    display: flex;
-    flex-direction: column;
-    gap: 15px; /* Jarak antar kartu */
-    padding: 10px;
-}
-
-.absent-card {
-    background: white;
-    border-radius: 16px;
-    padding: 20px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05); /* Bayangan halus */
-    border-left: 6px solid #e0e0e0; /* Garis warna default */
-    transition: transform 0.2s, box-shadow 0.2s;
-    position: relative;
-    overflow: hidden;
-}
-
-.absent-card:hover {
-    transform: translateY(-3px); /* Efek melayang saat disentuh */
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-}
-
-/* Warna khusus berdasarkan status */
-.status-sakit { border-left-color: #ef4444; } /* Merah untuk Sakit */
-.status-izin { border-left-color: #3b82f6; }  /* Biru untuk Izin */
-.status-alpha { border-left-color: #f59e0b; } /* Kuning untuk Alpha */
-
-.card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 8px;
-}
-
-.absent-name {
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: #333;
-    margin: 0;
-}
-
-.status-badge {
-    font-size: 0.75rem;
-    padding: 4px 12px;
-    border-radius: 20px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-/* Badge Warna */
-.badge-sakit { background-color: #fee2e2; color: #991b1b; }
-.badge-izin { background-color: #dbeafe; color: #1e40af; }
-.badge-default { background-color: #f3f4f6; color: #374151; }
-
-.absent-note {
-    font-size: 0.9rem;
-    color: #666;
-    background-color: #f8fafc;
-    padding: 10px;
-    border-radius: 8px;
-    margin-top: 5px;
-    font-style: italic;
-    display: flex;
-    align-items: center;
-}
-
-.absent-note::before {
-    content: "📝"; /* Ikon catatan */
-    margin-right: 8px;
-    font-style: normal;
-}
-
     </style>
 
 </head>
@@ -477,7 +402,12 @@
             <i class="fas fa-list-alt"></i> Rincian Jurnal Harian
         </h3>
         
-        <div id="absentCardContainer" class="absent-container"></div>
+        <div class="table-responsive">
+            <table class="custom-table" id="tabelJurnalBody">
+                </table>
+        </div>
+    </div>
+</div>
 
     <div id="modalBulanan" class="modal">
     <div class="modal-content" style="max-width: 800px;"> 
@@ -712,61 +642,34 @@
         }
     }
 
-        // --- FUNGSI KLIK ANGKA (VERSI FUTURISTIK & MODERN) ---
+        // --- FUNGSI KLIK ANGKA (VERSI FINAL - TERIMA BERES) ---
     function openAbsenTodayModal() {
-        const dataList = window.dataAbsenTodayCache; 
-        const container = document.getElementById('absentCardContainer'); // Wadah baru
-        container.innerHTML = ""; // Bersihkan isi lama
+        const dataList = window.dataAbsenTodayCache; // Ini data dari kolom H Spreadsheet
+        const tbody = document.getElementById('tabelAbsenTodayBody');
+        tbody.innerHTML = ""; 
         
         // Judul Tanggal
         const today = new Date();
         const dateStr = today.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
         document.getElementById('tanggalHariIniTitle').innerText = dateStr;
 
+        // TAMPILKAN DATA
         if (dataList && dataList.length > 0) {
             dataList.forEach((baris) => {
-                // Ambil data
-                const nama = baris[0];
-                const statusRaw = baris[1] || "Tanpa Ket"; // Misal: "Sakit", "Izin"
-                const catatan = baris[2] || "-";
-
-                // Logika Warna Otomatis
-                let borderClass = "status-alpha";
-                let badgeClass = "badge-default";
+                // baris[0] adalah Nama (dari Kolom H)
+                // baris[1] adalah Jabatan/Keterangan (dari Kolom I)
+                // baris[2] adalah Catatan (dari Kolom J)
                 
-                // Cek isi teks status (case insensitive)
-                if (statusRaw.toLowerCase().includes("sakit")) {
-                    borderClass = "status-sakit"; // Garis Merah
-                    badgeClass = "badge-sakit";   // Badge Merah Muda
-                } else if (statusRaw.toLowerCase().includes("izin")) {
-                    borderClass = "status-izin";  // Garis Biru
-                    badgeClass = "badge-izin";    // Badge Biru Muda
-                }
-
-                // Desain Kartu HTML (Card)
-                const cardHtml = `
-                    <div class="absent-card ${borderClass}">
-                        <div class="card-header">
-                            <h4 class="absent-name">${nama}</h4>
-                            <span class="status-badge ${badgeClass}">${statusRaw}</span>
-                        </div>
-                        <div class="absent-note">
-                            ${catatan}
-                        </div>
-                    </div>
-                `;
-
-                container.innerHTML += cardHtml;
+                let rowHtml = "<tr>";
+                rowHtml += `<td><strong>${baris[0]}</strong></td>`; 
+                rowHtml += `<td>${baris[1]}</td>`; 
+                rowHtml += `<td>${baris[2]}</td>`; 
+                rowHtml += "</tr>";
+                tbody.innerHTML += rowHtml;
             });
         } else {
-            // Tampilan Jika Kosong (Futuristik juga)
-            container.innerHTML = `
-                <div style="text-align:center; padding: 40px; color:#aaa;">
-                    <div style="font-size: 3rem;">✨</div>
-                    <p style="margin-top:10px; font-weight:500;">Luar Biasa!</p>
-                    <small>Semua Karyawan Hadir Hari Ini.</small>
-                </div>
-            `;
+            // Kalau Spreadsheet mengirim list kosong/nihil
+            tbody.innerHTML = "<tr><td colspan='3' style='text-align:center; padding: 20px;'>Nihil. Semua Masuk!</td></tr>";
         }
         
         openModal('modalAbsenToday');
