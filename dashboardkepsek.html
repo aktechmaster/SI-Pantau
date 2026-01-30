@@ -536,6 +536,55 @@
         loadUserData();
     };
 
+        // --- EVENT LISTENER: CEK KUOTA SAAT GURU DIPILIH ---
+    document.getElementById('guru').addEventListener('change', function() {
+        var namaGuru = this.value;
+        var btn = document.getElementById('btnKirim');
+        
+        // 1. Ubah Tombol jadi Loading
+        btn.disabled = true;
+        btn.innerHTML = '<span class="loader"></span> MEMERIKSA JATAH...';
+        btn.style.background = "#64748b"; // Warna abu-abu saat loading
+
+        // 2. Panggil Script "cekKuotaGuru" yang baru kita buat
+        google.script.run
+        .withSuccessHandler(function(hasil) {
+            
+            // SKENARIO 1: Script Berhasil Jalan
+            if (hasil.status === "SUKSES") {
+                
+                if (hasil.bolehInput) {
+                    // Masih punya jatah
+                    btn.disabled = false;
+                    btn.innerHTML = `UPLOAD DATA (Sisa: ${hasil.sisa}) <i class="fa-solid fa-rocket"></i>`;
+                    btn.style.background = ""; // Balik ke warna asli (Gradient Biru)
+                    console.log("Jatah: " + hasil.jatah + ", Realisasi: " + hasil.realisasi);
+                    
+                } else {
+                    // Jatah Habis
+                    btn.disabled = true;
+                    btn.innerHTML = '⛔ JATAH HARI INI HABIS';
+                    btn.style.background = "#ef4444"; // Warna Merah
+                    alert(`Maaf ${namaGuru}, jatah input jurnal Anda hari ini (${hasil.jatah}) sudah terpenuhi.`);
+                }
+
+            } else {
+                // Nama tidak ditemukan atau Error lain dari logika
+                btn.disabled = true;
+                btn.innerHTML = '⚠️ DATA TIDAK DITEMUKAN';
+                alert("Error: " + hasil.pesan);
+            }
+        })
+        .withFailureHandler(function(error) {
+            // SKENARIO 2: Koneksi Gagal Total
+            console.log(error);
+            btn.disabled = false;
+            btn.innerHTML = '⚠️ ERROR KONEKSI (COBA LAGI)';
+            alert("Gagal menghubungi server database.");
+        })
+        .cekKuotaGuru(namaGuru); // Pemanggilan Fungsi Backend
+    });
+
     // 3. AMBIL DATA LENGKAP (User, Jurnal, Absensi)
     async function loadUserData() {
         try {
