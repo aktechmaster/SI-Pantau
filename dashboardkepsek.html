@@ -301,10 +301,17 @@
     </p>
 </div>
                 
-                <div class="card" onclick="alert('Membuka detail Jurnal Bulanan...')">
-                    <div class="pie-chart" style="background: conic-gradient(#3a7bd5 92%, #f0f4f8 0%);" data-percent="92%"></div>
-                    <h3>Jurnal Bulanan</h3><p style="color: var(--text-soft); font-size: 0.85rem;">Akumulasi Januari</p>
-                </div>
+                <div class="card">
+    <div class="chart-container">
+        <div class="circular-progress" id="bulananChart">
+            <div class="value-container" id="bulananPercent">0%</div>
+        </div>
+    </div>
+    <h3>Jurnal Bulanan</h3>
+    <p class="detail-link" onclick="openBulananModal()">
+        Lihat Rincian <i class="fas fa-arrow-right"></i>
+    </p>
+</div>
 
                 <div class="card" onclick="openModal('modalAbsensi')">
                     <div class="card-icon"><i class="fas fa-user-astronaut"></i></div>
@@ -392,6 +399,20 @@
     </div>
 </div>
 
+    <div id="modalBulanan" class="modal">
+    <div class="modal-content" style="max-width: 800px;"> 
+        <span class="close-btn" onclick="closeModal('modalBulanan')">&times;</span>
+        <h3 style="border-bottom: 2px solid #007bff; padding-bottom: 10px;">
+            <i class="fas fa-calendar-alt"></i> Rincian Jurnal Bulanan
+        </h3>
+        
+        <div class="table-responsive">
+            <table class="custom-table" id="tabelBulananBody">
+                </table>
+        </div>
+    </div>
+</div>
+
 
 
     <script>
@@ -423,7 +444,7 @@
         loadUserData();
     };
 
-    // 3. Ambil Data Detail (NIP, Foto, dll)
+    // 3. Ambil Data Detail (NIP, Foto, Jurnal Harian & Bulanan)
     async function loadUserData() {
         try {
             console.log("Memulai fetch data..."); 
@@ -438,12 +459,11 @@
             
             // --- BAGIAN 1: PROFIL USER & FOTO ---
             const bio = data.biodata[loggedInUser]; 
-
             if (bio) {
                 document.getElementById('userNIPY').innerText = "NIPY: " + (bio.nip || "-");
                 document.getElementById('userRole').innerText = `${userRole} | ${bio.tugasTambahan || "-"}`;
                 
-                // LOGIKA FOTO
+                // Logika Foto
                 const imgElement = document.getElementById('userPhoto');
                 if(bio.foto && bio.foto.length > 10) {
                     imgElement.src = bio.foto;
@@ -452,25 +472,38 @@
                 }
             }
 
-            // --- BAGIAN 2: JURNAL HARIAN (INI KODE BARUNYA) ---
-            // Disisipkan tepat setelah kurung tutup milik 'if (bio)'
+            // --- BAGIAN 2: JURNAL HARIAN ---
             if (data.jurnal) {
-                // 1. Update Angka Persen Teks
                 const strPersen = data.jurnal.persentase; 
                 document.getElementById('jurnalPercent').innerText = strPersen;
 
-                // 2. Update Grafik Lingkaran (Warna Biru Berputar)
-                // Ubah teks "85%" jadi angka 85
                 let angka = parseFloat(strPersen.replace('%', '').replace(',', '.')); 
                 if (isNaN(angka)) angka = 0;
                 
-                // Rumus: 100% = 360 derajat
                 const derajat = angka * 3.6;
                 document.getElementById('jurnalChart').style.background = 
                     `conic-gradient(#007bff ${derajat}deg, #e0e0e0 0deg)`;
 
-                // 3. Simpan Data Tabel ke Memori (Agar bisa dibuka tombol)
                 window.dataJurnalCache = data.jurnal.tabel;
+            }
+
+            // --- BAGIAN 3: JURNAL BULANAN (BARU) ---
+            if (data.jurnalBulanan) {
+                // 1. Update Teks Persen Bulanan
+                const strPersenBl = data.jurnalBulanan.persentase; 
+                document.getElementById('bulananPercent').innerText = strPersenBl;
+
+                // 2. Update Grafik Lingkaran Bulanan
+                let angkaBl = parseFloat(strPersenBl.replace('%', '').replace(',', '.')); 
+                if (isNaN(angkaBl)) angkaBl = 0;
+                
+                const derajatBl = angkaBl * 3.6;
+                // Gunakan ID 'bulananChart'
+                document.getElementById('bulananChart').style.background = 
+                    `conic-gradient(#007bff ${derajatBl}deg, #e0e0e0 0deg)`;
+
+                // 3. Simpan Data Tabel Bulanan
+                window.dataBulananCache = data.jurnalBulanan.tabel;
             }
 
         } catch (error) {
@@ -478,6 +511,8 @@
             alert("Gagal memuat data: " + error);
         }
     }
+
+        
     // --- FITUR STANDAR LAINNYA (Menu & Modal) ---
     function toggleMenu() {
         event.stopPropagation(); 
@@ -546,6 +581,32 @@
             alert("Data Jurnal sedang dimuat atau kosong. Tunggu sebentar...");
         }
     }    
+
+        // --- FUNGSI BARU: BUKA MODAL JURNAL BULANAN ---
+    function openBulananModal() {
+        const tabelData = window.dataBulananCache; // Ambil data bulanan
+        const tbody = document.getElementById('tabelBulananBody');
+        tbody.innerHTML = ""; // Bersihkan tabel lama
+
+        if (tabelData && tabelData.length > 0) {
+            tabelData.forEach((baris, index) => {
+                let rowHtml = "<tr>";
+                baris.forEach(sel => {
+                    // Baris pertama jadi Header Tebal
+                    if (index === 0) {
+                        rowHtml += `<th><b>${sel}</b></th>`;
+                    } else {
+                        rowHtml += `<td>${sel}</td>`;
+                    }
+                });
+                rowHtml += "</tr>";
+                tbody.innerHTML += rowHtml;
+            });
+            openModal('modalBulanan'); 
+        } else {
+            alert("Data Jurnal Bulanan belum muncul. Tunggu loading...");
+        }
+    }
         
 </script>
 
