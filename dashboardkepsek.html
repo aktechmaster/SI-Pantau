@@ -203,10 +203,10 @@
             <p style="color: var(--primary-tech); font-weight: 700; font-size: 0.85rem; margin-top: 10px; letter-spacing: 1px;">SI PANTAU</p>
         </div>
         <img id="userPhoto" 
-     src="https://via.placeholder.com/150?text=No+Photo" 
+     src="" 
      alt="Profile" 
-     class="profile-img"
-     onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=User&background=random';">
+     style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 2px solid white;"
+>
     </div>
 
 
@@ -327,25 +327,35 @@
     // 3. Ambil Data Detail (NIP, Foto, dll)
     async function loadUserData() {
         try {
+            console.log("Memulai fetch data..."); // Cek Console browser
             const response = await fetch(webAppUrl);
             const data = await response.json();
+            console.log("Data diterima:", data); // Cek apakah data masuk
+
+            // Cek Error dari server
+            if (data.error) {
+                alert("Error Script: " + data.error);
+                return;
+            }
             
-            // Cari biodata milik user yang sedang login
             const bio = data.biodata[loggedInUser]; 
 
             if (bio) {
                 document.getElementById('userNIPY').innerText = "NIPY: " + (bio.nip || "-");
-                // Gabungkan jabatan dari Login + Tugas Tambahan dari Biodata
                 document.getElementById('userRole').innerText = `${userRole} | ${bio.tugasTambahan || "-"}`;
                 
-                if(bio.foto) {
-                    document.getElementById('userPhoto').src = bio.foto;
+                // LOGIKA FOTO SEDERHANA
+                const imgElement = document.getElementById('userPhoto');
+                if(bio.foto && bio.foto.length > 10) {
+                    imgElement.src = bio.foto;
+                } else {
+                    // Fallback manual jika kosong
+                    imgElement.src = "https://via.placeholder.com/150?text=No+Img";
                 }
-            } else {
-                console.log("Biodata detail belum diisi di Sheet Biodata");
             }
         } catch (error) {
-            console.error("Gagal koneksi database:", error);
+            console.error("Gagal koneksi:", error);
+            alert("Gagal memuat data: " + error);
         }
     }
 
