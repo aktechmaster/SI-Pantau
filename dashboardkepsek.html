@@ -327,12 +327,11 @@
     // 3. Ambil Data Detail (NIP, Foto, dll)
     async function loadUserData() {
         try {
-            console.log("Memulai fetch data..."); // Cek Console browser
+            console.log("Memulai fetch data..."); 
             const response = await fetch(webAppUrl);
             const data = await response.json();
-            console.log("Data diterima:", data); // Cek apakah data masuk
+            console.log("Data diterima:", data); 
 
-            // Cek Error dari server
             if (data.error) {
                 alert("Error Script: " + data.error);
                 return;
@@ -341,6 +340,10 @@
             const bio = data.biodata[loggedInUser]; 
 
             if (bio) {
+                // vvvvvvvvvvvvv TEMPEL DISINI vvvvvvvvvvvvv
+                alert("CEK LINK FOTO: " + bio.foto); 
+                // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
                 document.getElementById('userNIPY').innerText = "NIPY: " + (bio.nip || "-");
                 document.getElementById('userRole').innerText = `${userRole} | ${bio.tugasTambahan || "-"}`;
                 
@@ -349,7 +352,6 @@
                 if(bio.foto && bio.foto.length > 10) {
                     imgElement.src = bio.foto;
                 } else {
-                    // Fallback manual jika kosong
                     imgElement.src = "https://via.placeholder.com/150?text=No+Img";
                 }
             }
@@ -358,7 +360,6 @@
             alert("Gagal memuat data: " + error);
         }
     }
-
     // --- FITUR STANDAR LAINNYA (Menu & Modal) ---
     function toggleMenu() {
         event.stopPropagation(); 
