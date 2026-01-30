@@ -340,10 +340,7 @@
             const bio = data.biodata[loggedInUser]; 
 
             if (bio) {
-                // vvvvvvvvvvvvv TEMPEL DISINI vvvvvvvvvvvvv
-                alert("CEK LINK FOTO: " + bio.foto); 
-                // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
+               
                 document.getElementById('userNIPY').innerText = "NIPY: " + (bio.nip || "-");
                 document.getElementById('userRole').innerText = `${userRole} | ${bio.tugasTambahan || "-"}`;
                 
