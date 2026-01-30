@@ -642,38 +642,36 @@
         }
     }
 
-        // --- FUNGSI KLIK ANGKA (MODE DETEKTIF / DEBUG) ---
+        // --- FUNGSI KLIK ANGKA (VERSI CERDAS / AUTO-DETECT) ---
     function openAbsenTodayModal() {
         const rawData = window.dataAbsenTodayCache; 
         const tbody = document.getElementById('tabelAbsenTodayBody');
         tbody.innerHTML = "";
         
-        // Format Tanggal Hari Ini versi Komputer (DD/MM/YYYY)
+        // 1. Siapkan Tanggal Hari Ini
         const today = new Date();
         const d = String(today.getDate()).padStart(2, '0');
         const m = String(today.getMonth() + 1).padStart(2, '0');
         const y = today.getFullYear();
-        const todayStr = `${d}/${m}/${y}`; // Target: "30/01/2026"
 
-        // Tampilkan tanggal di Judul
-        document.getElementById('tanggalHariIniTitle').innerText = todayStr;
+        // KITA SIAPKAN 2 KUNCI PENCARIAN:
+        const formatIndo = `${d}/${m}/${y}`;   // Contoh: "30/01/2026"
+        const formatMesin = `${y}-${m}-${d}`;  // Contoh: "2026-01-30"
+
+        // Update Judul
+        document.getElementById('tanggalHariIniTitle').innerText = formatIndo;
 
         if (rawData && rawData.length > 0) {
             let adaData = false;
-            
-            // --- DETEKTIF GEMINI MULAI ---
-            // Kita intip data baris pertama untuk melihat format tanggalnya
-            // Nanti akan muncul Pop Up Alert memberitahu formatnya
-            if (rawData[0]) {
-               // Hapus baris alert ini jika nanti sudah berhasil
-               // alert("DEBUG: Sistem mencari '" + todayStr + "'\nTapi data di Sheet baris pertama tertulis: '" + rawData[0][0] + "'");
-            }
-            // --- DETEKTIF SELESAI ---
 
             rawData.forEach((baris) => {
-                // Cek apakah data Tanggal (baris[0]) mengandung teks Hari Ini
-                // Kita gunakan String() untuk memastikan dia dianggap teks
-                if (baris[0] && String(baris[0]).includes(todayStr)) {
+                // Ambil data tanggal dari kolom pertama
+                let tanggalDiSheet = String(baris[0]); 
+
+                // --- LOGIKA PINTAR ---
+                // Cek apakah data di sheet mengandung Format Indo ATAU Format Mesin
+                if (tanggalDiSheet.includes(formatIndo) || tanggalDiSheet.includes(formatMesin)) {
+                    
                     let rowHtml = "<tr>";
                     baris.forEach(sel => {
                         rowHtml += `<td>${sel}</td>`;
@@ -684,14 +682,23 @@
                 }
             });
 
+            // Jika masih tidak ketemu juga
             if (!adaData) {
-                // Pesan kalau tidak ada yang cocok
-                tbody.innerHTML = "<tr><td colspan='4' style='text-align:center; padding: 20px; color: red;'>Format Tanggal Tidak Cocok!<br>Sistem cari: " + todayStr + "</td></tr>";
+                // Tampilkan apa yang sebenarnya dilihat oleh sistem (untuk debug)
+                let contohData = rawData[0] ? rawData[0][0] : "Kosong";
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan='4' style='text-align:center; padding: 20px;'>
+                            <b style='color:red'>Data Tidak Ditemukan!</b><br>
+                            <small>Sistem mencari: ${formatIndo} atau ${formatMesin}<br>
+                            Data di Sheet tertulis: <b>${contohData}</b></small>
+                        </td>
+                    </tr>`;
             }
             
             openModal('modalAbsenToday');
         } else {
-            alert("Data Absensi belum dimuat atau kosong.");
+            alert("Data Absensi belum dimuat.");
         }
     }
 
